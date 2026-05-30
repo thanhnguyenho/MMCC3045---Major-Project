@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Meomeo's Journey Home 🐾 — Hardcore Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:ital,wght@0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div id="game">
+  <div id="overlay"></div>
+  <div id="flash"></div>
+  <div id="meow-pop">Mrow! 🐾</div>
+
+  <div id="bg" class="bg-cafe"></div>
+  <div id="scene-art"></div>
+  <div id="particles"></div>
+
+  <!-- CAT -->
+  <div id="cat-area" class="anim-idle">
+    <img id="cat-img" src="Media/Meomeo/Happy.png" alt="Meomeo">
+  </div>
+
+  <!-- NPCs -->
+  <div id="npc-left" class="npc-area"></div>
+  <div id="npc-right" class="npc-area"></div>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div id="chapter-tag">🐾 Meomeo</div>
+    <div id="stats-hud">
+      <div class="sh-stat" id="sh-hp" title="HP">
+        <span class="sh-icon">❤️</span>
+        <div class="sh-bar-wrap"><div class="sh-bar hp" id="bar-hp" style="width:100%"></div></div>
+        <span class="sh-val" id="val-hp">3/3</span>
+      </div>
+      <div class="sh-stat" id="sh-hunger" title="Hunger">
+        <span class="sh-icon">🍖</span>
+        <div class="sh-bar-wrap"><div class="sh-bar hunger" id="bar-hunger" style="width:100%"></div></div>
+        <span class="sh-val" id="val-hunger">3/3</span>
+      </div>
+      <div class="sh-stat" id="sh-courage" title="Courage">
+        <span class="sh-icon">⚡</span>
+        <div class="sh-bar-wrap"><div class="sh-bar courage" id="bar-courage" style="width:0%"></div></div>
+        <span class="sh-val" id="val-courage">0</span>
+      </div>
+      <div class="sh-stat" id="sh-skill" title="Street Skill">
+        <span class="sh-icon">🐾</span>
+        <div class="sh-bar-wrap"><div class="sh-bar skill" id="bar-skill" style="width:0%"></div></div>
+        <span class="sh-val" id="val-skill">0</span>
+      </div>
+      <div class="sh-stat" id="sh-kind" title="Kindness">
+        <span class="sh-icon">💜</span>
+        <div class="sh-bar-wrap"><div class="sh-bar kind" id="bar-kind" style="width:0%"></div></div>
+        <span class="sh-val" id="val-kind">0</span>
+      </div>
+    </div>
+    <div id="lives-row">
+      <span class="life-pip" id="lp-0">😺</span>
+      <span class="life-pip" id="lp-1">😺</span>
+      <span class="life-pip" id="lp-2">😺</span>
+    </div>
+    <div id="hardcore-badge">☠ HARDCORE</div>
+    <button class="hud-btn" id="inv-btn" title="Inventory (I)">🎒</button>
+    <button class="hud-btn" id="auto-btn" title="Auto (A)">AUTO</button>
+    <button class="hud-btn" id="skip-btn" title="Skip (S)">SKIP</button>
+    <button class="hud-btn" id="log-btn"  title="Log (B)">LOG</button>
+    <button class="hud-btn" id="set-btn"  title="Settings">⚙</button>
+    <button class="hud-btn" id="sound-btn" title="Sound">🔊</button>
+  </div>
+
+  <!-- INVENTORY BAR -->
+  <div id="inventory-bar">
+    <div id="inv-label">🎒 ITEMS</div>
+    <div id="inv-slots"></div>
+    <button class="hud-btn" id="inv-close-btn">✕</button>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="settings-panel">
+    <h3>⚙ Settings</h3>
+    <div class="setting-row">
+      <label>Text Speed</label>
+      <input type="range" class="s-slider" id="speed-slider" min="5" max="80" value="22">
+      <span class="s-val" id="speed-val">22</span>
+    </div>
+    <div class="setting-row">
+      <label>Auto Speed (s)</label>
+      <input type="range" class="s-slider" id="auto-slider" min="1" max="6" value="3" step=".5">
+      <span class="s-val" id="auto-val">3s</span>
+    </div>
+    <div class="setting-row">
+      <label>Sound Volume</label>
+      <input type="range" class="s-slider" id="vol-slider" min="0" max="100" value="70">
+      <span class="s-val" id="vol-val">70</span>
+    </div>
+  </div>
+
+  <!-- BACKLOG -->
+  <div id="backlog-panel">
+    <h3>📜 Dialogue Log <button id="backlog-close">✕ Close</button></h3>
+    <div id="backlog-list"></div>
+  </div>
+
+  <!-- DIALOGUE BOX -->
+  <div id="dialogue-wrap">
+    <div id="speaker-row">
+      <div id="speaker-tag">Narrator</div>
+      <div id="auto-indicator">⏵ AUTO</div>
+      <div id="skip-indicator">⏩ SKIP</div>
+    </div>
+    <div id="dialogue-text"></div>
+    <div id="tap-hint">
+      <span class="th-left">SPACE/ENTER advance • A=Auto • S=Skip • B=Log</span>
+      <span class="th-right">▼ tap</span>
+    </div>
+  </div>
+
+  <!-- CHOICE PANEL -->
+  <div id="choice-panel">
+    <div id="choice-prompt"></div>
+    <div id="choices-grid"></div>
+  </div>
+
+  <!-- PUZZLE PANEL -->
+  <div id="puzzle-panel"></div>
+
+  <!-- FAIL OVERLAY -->
+  <div id="fail-overlay">
+    <div class="fo-skull">💀</div>
+    <div class="fo-title">Chapter Failed!</div>
+    <div class="fo-sub" id="fo-sub">Meomeo didn't make it...</div>
+    <div class="fo-reason" id="fo-reason">You ran out of lives.</div>
+    <div class="fo-btns">
+      <button class="fo-btn" id="fo-retry">🔄 Retry Chapter</button>
+      <button class="fo-btn" id="fo-restart">🏠 Main Menu</button>
+    </div>
+  </div>
+
+  <!-- ENDING SCREEN -->
+  <div id="ending-screen"></div>
+
+  <!-- CHAPTER CARD -->
+  <div id="chapter-card">
+    <div class="cc-line"></div>
+    <div class="cc-chapter" id="cc-chapter"></div>
+    <div class="cc-title" id="cc-title"></div>
+    <div class="cc-sub" id="cc-sub"></div>
+    <div class="cc-line"></div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast"></div>
+
+  <!-- TITLE SCREEN -->
+  <div id="title-screen">
+    <div id="title-bg"></div>
+    <div class="t-tagline">A Visual Novel Adventure</div>
+    <div class="t-cat-wrap">🐱</div>
+    <h1 id="t-title">Meomeo's<br>Journey Home</h1>
+    <p id="t-sub">✨ Hardcore Edition ✨</p>
+    <div class="hc-warning">☠ HARDCORE MODE — Fail a puzzle = lose a life. Lose all lives = restart chapter.</div>
+    <div class="t-div"></div>
+    <button id="t-start">🐾 Begin Journey</button>
+    <p id="t-hint">6 possible endings • 5 mini-game types • Inventory system</p>
+    <div class="t-shortcuts">
+      <div class="t-key">SPACE / ENTER — Advance</div>
+      <div class="t-key">A — Auto play</div>
+      <div class="t-key">S — Skip</div>
+      <div class="t-key">B — Backlog</div>
+      <div class="t-key">I — Inventory</div>
+    </div>
+  </div>
+</div><!-- #game -->
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   JQUERY PLUGINS
+═══════════════════════════════════════════════════════ */
+$.fn.typewrite = function(text, speed, cb) {
+  const $el = this; let i = 0;
+  $el.text('').data('full', text).data('done', false);
+  clearInterval($el.data('twTimer'));
+  const tick = () => {
+    if (i < text.length) { $el.text($el.text() + text[i++]); }
+    else { $el.data('done', true); clearInterval($el.data('twTimer')); if (cb) cb(); }
+  };
+  $el.data('twTimer', setInterval(tick, speed || 22));
+  return this;
+};
+$.fn.skipTypewrite = function() {
+  const $el = this;
+  if (!$el.data('done')) {
+    clearInterval($el.data('twTimer'));
+    $el.text($el.data('full')).data('done', true);
+    return false;
+  }
+  return true;
+};
+
+const CAT_EXPRS = {
+  idle:      { img:'Media/Meomeo/Happy.png',     an:'anim-idle' },
+  happy:     { img:'Media/Meomeo/Happy.png',     an:'anim-happy' },
+  love:      { img:'Media/Meomeo/Happy.png',     an:'anim-happy' },
+  determined:{ img:'Media/Meomeo/Happy.png',     an:'anim-idle' },
+  cat_try:   { img:'Media/Meomeo/cố gắng.png',  an:'anim-idle' },
+  sad:       { img:'Media/Meomeo/Sad.png',       an:'anim-sad' },
+  scared:    { img:'Media/Meomeo/Scare.png',     an:'anim-scared' },
+  box:       { img:'Media/Meomeo/the box.png',   an:'anim-sad' },
+  boxScared: { img:'Media/Meomeo/the box.png',   an:'anim-scared' },
+  bounce:    { img:'Media/Meomeo/Happy.png',     an:'anim-bounce' },
+  spin:      { img:'Media/Meomeo/Play.png',      an:'anim-spin' },
+  play:      { img:'Media/Meomeo/Play.png',      an:'anim-spin' },
+};
+
+$.fn.catExpr = function(expr) {
+  const ex = CAT_EXPRS[expr] || CAT_EXPRS.idle;
+  this.removeClass('anim-idle anim-happy anim-scared anim-sad anim-bounce anim-spin').addClass(ex.an);
+  $('#cat-img').attr('src', ex.img);
+  return this;
+};
+
+/* ═══════════════════════════════════════════════════════
+   SOUND ENGINE
+═══════════════════════════════════════════════════════ */
+const SFX = (() => {
+  let ctx=null, vol=.7, muted=false;
+  const ac = ()=>{ if(!ctx) ctx=new(window.AudioContext||window.webkitAudioContext)(); return ctx; };
+  const tone = (f,d,t='sine',v=.12,dl=0)=>{
+    if(muted) return;
+    try{
+      const c=ac(),o=c.createOscillator(),g=c.createGain();
+      o.connect(g);g.connect(c.destination);
+      o.type=t;o.frequency.value=f;
+      const gv=v*vol;
+      g.gain.setValueAtTime(gv,c.currentTime+dl);
+      g.gain.exponentialRampToValueAtTime(.001,c.currentTime+dl+d);
+      o.start(c.currentTime+dl);o.stop(c.currentTime+dl+d);
+    }catch(e){}
+  };
+  return {
+    setVol(v){vol=v/100;},
+    toggleMute(){muted=!muted;return muted;},
+    click(){tone(900,.07,'sine',.08);},
+    correct(){tone(524,.14,'sine',.11);tone(660,.14,'sine',.11,.1);tone(784,.28,'sine',.11,.2);},
+    wrong(){tone(220,.4,'sawtooth',.09);},
+    trans(){tone(440,.2,'sine',.07);tone(330,.18,'sine',.06,.18);},
+    fail(){tone(200,.6,'sawtooth',.14);tone(150,.5,'sawtooth',.12,.5);},
+    meow(){
+      if(muted)return;
+      try{
+        const c=ac(),o=c.createOscillator(),g=c.createGain();
+        o.connect(g);g.connect(c.destination);o.type='sine';
+        o.frequency.setValueAtTime(520,c.currentTime);
+        o.frequency.linearRampToValueAtTime(920,c.currentTime+.15);
+        o.frequency.linearRampToValueAtTime(620,c.currentTime+.42);
+        const gv=.14*vol;
+        g.gain.setValueAtTime(gv,c.currentTime);
+        g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.48);
+        o.start();o.stop(c.currentTime+.48);
+      }catch(e){}
+    },
+    happy(){[524,660,784,1048].forEach((f,i)=>tone(f,.18,'sine',.1,i*.08));},
+    sad(){tone(330,.5,'sine',.1);tone(260,.6,'sine',.08,.42);},
+    tick(){tone(660,.06,'square',.06);},
+    tada(){[392,523,659,784,1047].forEach((f,i)=>tone(f,.22,'sine',.12,i*.1));}
+  };
+})();
+
+/* ═══════════════════════════════════════════════════════
+   PARTICLES
+═══════════════════════════════════════════════════════ */
+function spawnStars(n=50) {
+  const $p=$('#particles');
+  for(let i=0;i<n;i++){
+    const sz=1+Math.random()*2.5;
+    $('<div>').addClass('star').css({width:sz,height:sz,
+      left:Math.random()*100+'%',top:Math.random()*80+'%',
+      '--d':(1.5+Math.random()*3.5)+'s','--dl':(Math.random()*4)+'s'}).appendTo($p);
+  }
+}
+function spawnFloat(type,n=14){
+  const $p=$('#particles');
+  const map={hearts:'💕',paws:'🐾',sparks:'✨',fish:'🐟',stars:'⭐'};
+  for(let i=0;i<n;i++){
+    $('<div>').addClass('fp').text(map[type]||'✨').css({
+      left:Math.random()*100+'%',bottom:(8+Math.random()*22)+'%',
+      '--fs':(.7+Math.random()*.6)+'rem','--d':(2.5+Math.random()*4)+'s','--dl':(Math.random()*4)+'s'
+    }).appendTo($p);
+  }
+}
+function clearParticles(){$('#particles').empty();}
+
+/* ═══════════════════════════════════════════════════════
+   SCENE ART
+═══════════════════════════════════════════════════════ */
+const ARTS = {
+  cafe:`<div class="a-moon"></div><div class="a-cafe-glow"></div>`,
+  home:`<div class="a-top-glow"></div><div class="a-floor"></div>`,
+  city:`<div class="a-sky-city"></div>`,
+  alley:`<div class="a-sky-strip"></div>`,
+  none:''
+};
+function setArt(k){$('#scene-art').html(ARTS[k]||'');}
+
+/* ═══════════════════════════════════════════════════════
+   CAT & NPC HELPERS
+═══════════════════════════════════════════════════════ */
+function posCat(pos,sz=220){
+  const $ca=$('#cat-area');
+  $ca.css('width',sz+'px');
+  if(pos==='left') $ca.css({left:'6%',right:'auto',transform:'none'});
+  else if(pos==='right') $ca.css({right:'6%',left:'auto',transform:'none'});
+  else $ca.css({left:'50%',right:'auto',transform:'translateX(-50%)'});
+}
+const NPCS={
+  Lily:{name:'Lily',emotions:{idle:'Media/Lily/Idle.png',happy:'Media/Lily/Happy.png',
+    sad:'Media/Lily/sad.png',angry:'Media/Lily/angry.png',talk:'Media/Lily/Talk.png',love:'Media/Lily/Idle.png'}},
+  Mina:{name:'Mina',img:'Media/NPC/Mina.png'},
+  Mochi:{name:'Mochi',emotions:{idle:'Media/NPC/Mochi/Mochi 3.png',happy:'Media/NPC/Mochi/Mochi 4.png',talk:'Media/NPC/Mochi/Mochi 3.png'}},
+  Shadow:{name:'Shadow',img:'Media/NPC/Shadow.png'},
+  Bruno:{name:'Bruno',img:'Media/NPC/Bruno.png'},
+  OldMan:{name:'Old Man',img:'Media/NPC/OldMan.png'}
+};
+function showNPC(slot,npcId,mood='idle',size=170){
+  const npc=NPCS[npcId]; if(!npc) return;
+  const $area=slot==='right'?$('#npc-right'):$('#npc-left');
+  const imgSrc=(npc.emotions&&npc.emotions[mood])||(npc.emotions&&npc.emotions.idle)||npc.img;
+  if(!imgSrc) return;
+  $area.removeClass('npc-idle npc-talk npc-happy npc-sad npc-scared npc-love npc-angry npc-confuse')
+    .addClass('npc-'+mood).css({width:size+'px',opacity:1})
+    .html(`<div class="npc-card"><img class="npc-img" src="${imgSrc}" alt="${npc.name}"><div class="npc-name">${npc.name}</div></div>`);
+  if(slot==='right') $area.css({right:'7%',left:'auto'});
+  else $area.css({left:'7%',right:'auto'});
+}
+function hideNPC(slot){const $a=slot==='right'?$('#npc-right'):$('#npc-left');$a.css('opacity',0).empty();}
+function hideAllNPCs(){hideNPC('left');hideNPC('right');}
+
+/* ═══════════════════════════════════════════════════════
+   GAME STATE — RPG STATS
+═══════════════════════════════════════════════════════ */
+const G = {
+  sceneId:null, dlIdx:0, dlQueue:[], choices:null,
+  // RPG stats
+  hp:3, maxHp:3,
+  hunger:3, maxHunger:3,
+  courage:0, maxCourage:5,
+  streetSkill:0, maxStreetSkill:5,
+  kindness:0, maxKindness:5,
+  suspicion:0, maxSuspicion:5, // high suspicion = humans distrust you
+  // chapter system
+  lives:3, maxLives:3,
+  chapterStartScene:null,
+  // inventory
+  inventory:[], // [{id, name, icon, desc, effect}]
+  // auto/skip
+  autoOn:false, skipOn:false, soundOn:true,
+  textSpeed:22, autoSpeed:3000, autoTimer:null,
+};
+
+/* ═══════════════════════════════════════════════════════
+   INVENTORY SYSTEM
+═══════════════════════════════════════════════════════ */
+const ITEMS = {
+  sardine:   {id:'sardine',  name:'Sardine',   icon:'🐟',desc:'Restores 1 Hunger. Very tasty.',effect:{hunger:1}},
+  bandage:   {id:'bandage',  name:'Bandage',   icon:'🩹',desc:'Restores 1 HP. Essential!',    effect:{hp:1}},
+  catnip:    {id:'catnip',   name:'Catnip',    icon:'🌿',desc:'+2 Courage temporarily.',      effect:{courage:2}},
+  ribbon:    {id:'ribbon',   name:'Ribbon',    icon:'🎀',desc:'+1 Kindness. Looks adorable!', effect:{kindness:1}},
+  map_scrap: {id:'map_scrap',name:'Map Scrap', icon:'🗺️',desc:'+2 Street Skill.',             effect:{streetSkill:2}},
+  fish_bone: {id:'fish_bone',name:'Fish Bone', icon:'🦴',desc:'Give to other cats. +1 trust.', effect:{kindness:1,streetSkill:1}},
+};
+
+function addItem(id){
+  const item=ITEMS[id]; if(!item) return;
+  G.inventory.push({...item});
+  showToast(`${item.icon} Got: ${item.name}!`);
+  renderInventory();
+}
+function useItem(idx){
+  const item=G.inventory[idx]; if(!item) return;
+  SFX.correct();
+  Object.keys(item.effect).forEach(stat=>{
+    modStat(stat, item.effect[stat]);
+  });
+  G.inventory.splice(idx,1);
+  showToast(`Used ${item.icon} ${item.name}!`);
+  renderInventory();
+}
+function renderInventory(){
+  const $slots=$('#inv-slots').empty();
+  if(G.inventory.length===0){
+    $('<div>').css({color:'rgba(200,168,255,.4)',fontSize:'.78rem',fontWeight:800,padding:'14px',fontStyle:'italic'})
+      .text('Empty — find items during your journey').appendTo($slots);
+    return;
+  }
+  G.inventory.forEach((item,idx)=>{
+    const isUsable = item.effect.hp || item.effect.hunger || item.effect.courage;
+    const $slot=$('<div>').addClass('inv-slot has-item'+(isUsable?' usable':''))
+      .attr('title',item.desc)
+      .append($('<div>').addClass('is-icon').text(item.icon))
+      .append($('<div>').addClass('is-name').text(item.name))
+      .on('click',()=>useItem(idx));
+    $slots.append($slot);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   STAT SYSTEM
+═══════════════════════════════════════════════════════ */
+function modStat(stat, delta){
+  if(!G.hasOwnProperty(stat)) return;
+  const max = G['max'+stat.charAt(0).toUpperCase()+stat.slice(1)] || 5;
+  G[stat] = Math.max(0, Math.min(max, G[stat] + delta));
+  updateStatsHUD();
+  const sign=delta>0?'+':'';
+  const icons={hp:'❤️',hunger:'🍖',courage:'⚡',streetSkill:'🐾',kindness:'💜',suspicion:'👁️'};
+  if(delta!==0) showToast(`${icons[stat]||stat} ${sign}${delta}`);
+  // check HP
+  if(stat==='hp' && G.hp<=0) triggerKO();
+  if(stat==='hunger' && G.hunger<=0){ showToast('😿 Starving! HP -1'); modStat('hp',-1); }
+}
+function updateStatsHUD(){
+  const stats=[
+    {id:'hp',max:G.maxHp,val:G.hp},
+    {id:'hunger',max:G.maxHunger,val:G.hunger},
+    {id:'courage',max:G.maxCourage,val:G.courage},
+    {id:'skill',max:G.maxStreetSkill,val:G.streetSkill},
+    {id:'kind',max:G.maxKindness,val:G.kindness},
+  ];
+  const statKeys={hp:'hp',hunger:'hunger',courage:'courage',skill:'streetSkill',kind:'kindness'};
+  stats.forEach(s=>{
+    const pct=Math.min(100,s.val/s.max*100);
+    $(`#bar-${s.id}`).css('width',pct+'%');
+    const raw=statKeys[s.id];
+    if(s.id==='hp') $(`#val-${s.id}`).text(G.hp+'/'+G.maxHp);
+    else if(s.id==='hunger') $(`#val-${s.id}`).text(G.hunger+'/'+G.maxHunger);
+    else $(`#val-${s.id}`).text(G[raw]);
+  });
+}
+function updateLivesHUD(){
+  for(let i=0;i<G.maxLives;i++){
+    const $p=$('#lp-'+i);
+    if(i < G.lives) $p.removeClass('lost');
+    else $p.addClass('lost');
+  }
+}
+function triggerKO(){
+  showToast('💀 Meomeo fainted!');
+  loseLife('HP hit zero!');
+}
+function loseLife(reason=''){
+  G.lives = Math.max(0, G.lives-1);
+  updateLivesHUD();
+  SFX.fail(); shakeScreen();
+  if(G.lives<=0) showChapterFail(reason);
+  else {
+    showToast(`😿 Life lost! ${G.lives} remaining...`);
+    G.hp = G.maxHp; // revive with full HP but keep other penalties
+    updateStatsHUD();
+  }
+}
+function shakeScreen(){$('#game').addClass('shake');setTimeout(()=>$('#game').removeClass('shake'),350);}
+function flashScreen(){$('#flash').stop(true).css('opacity',1).animate({opacity:0},180);}
+
+/* ═══════════════════════════════════════════════════════
+   HARDCORE — CHAPTER FAIL
+═══════════════════════════════════════════════════════ */
+function showChapterFail(reason){
+  stopAuto(); hideAllNPCs();
+  clearAllPuzzleTimers();
+  $('#fo-sub').text('Meomeo didn\'t survive this chapter...');
+  $('#fo-reason').text(reason||'All lives lost.');
+  $('#fail-overlay').css('display','flex');
+}
+function retryChapter(){
+  SFX.click();
+  G.lives=G.maxLives; G.hp=G.maxHp; G.hunger=G.maxHunger;
+  updateStatsHUD(); updateLivesHUD();
+  $('#fail-overlay').hide();
+  if(G.chapterStartScene) fadeTransition(()=>loadScene(G.chapterStartScene));
+  else playAgain();
+}
+function clearAllPuzzleTimers(){
+  clearInterval(G._timer1); clearTimeout(G._timer2);
+  clearInterval(G._memTimer); clearInterval(G._stealthTimer);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SPEAKER STYLING
+═══════════════════════════════════════════════════════ */
+const SPEAKERS={
+  'Narrator':    {bg:'rgba(60,30,120,.35)',bc:'rgba(160,100,255,.4)',col:'#ddc8ff'},
+  'Meomeo':      {bg:'rgba(180,60,180,.28)',bc:'rgba(220,130,255,.45)',col:'#f0c8ff'},
+  'Meomeo 💭':   {bg:'rgba(100,50,180,.28)',bc:'rgba(180,130,255,.4)',col:'#e4d0ff'},
+  'Lily':        {bg:'rgba(200,60,100,.28)',bc:'rgba(240,140,170,.45)',col:'#ffd0e0'},
+  'Shadow':      {bg:'rgba(40,80,110,.35)',bc:'rgba(100,160,200,.4)',col:'#c0e4ff'},
+  'Mochi':       {bg:'rgba(180,120,60,.28)',bc:'rgba(240,180,100,.4)',col:'#ffe8c0'},
+  'Old Man':     {bg:'rgba(60,110,70,.3)',bc:'rgba(100,200,120,.35)',col:'#c0f0d0'},
+  'Bruno':       {bg:'rgba(140,70,20,.35)',bc:'rgba(210,140,60,.4)',col:'#ffe0b0'},
+  'Mina':        {bg:'rgba(160,40,140,.3)',bc:'rgba(220,110,200,.4)',col:'#f8d0f8'},
+  'System':      {bg:'rgba(255,64,96,.2)',bc:'rgba(255,100,130,.4)',col:'#ffb0c0'},
+};
+function setSpeaker(name){
+  const s=SPEAKERS[name]||SPEAKERS['Narrator'];
+  $('#speaker-tag').text(name).css({background:s.bg,'border-color':s.bc,color:s.col});
+  $('#dialogue-wrap').toggleClass('narrator-mode',name==='Narrator');
+}
+
+/* ═══════════════════════════════════════════════════════
+   BACKLOG
+═══════════════════════════════════════════════════════ */
+const backlog=[];
+function addToLog(speaker,text){
+  backlog.push({speaker,text});
+  $('<div>').addClass('log-entry').append(
+    $('<div>').addClass('log-speaker').text(speaker),
+    $('<div>').addClass('log-text').text(text)
+  ).prependTo('#backlog-list');
+}
+
+/* ═══════════════════════════════════════════════════════
+   TOAST + CHAPTER CARD
+═══════════════════════════════════════════════════════ */
+function showToast(msg,dur=2600){
+  $('#toast').stop(true).text(msg)
+    .css({opacity:0,transform:'translateX(-50%) translateY(-8px)'})
+    .animate({opacity:1},250).delay(dur).animate({opacity:0},300);
+}
+function showChapterCard(ch,title,sub,cb){
+  $('#cc-chapter').text(ch);$('#cc-title').text(title);$('#cc-sub').text(sub||'');
+  $('#chapter-card').stop(true,true).css({opacity:0,display:'flex'})
+    .animate({opacity:1},500).delay(2000).animate({opacity:0},500,()=>{$('#chapter-card').hide();if(cb)cb();});
+}
+function fadeTransition(cb){
+  const $ov=$('#overlay');SFX.trans();
+  $ov.stop(true).animate({opacity:1},320,()=>{
+    try{if(typeof cb==='function')cb();}catch(err){showToast('⚠ Error: '+err.message,5000);}
+    finally{$ov.stop(true).animate({opacity:0},380);}
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   UNLOCKING & GALLERY
+═══════════════════════════════════════════════════════ */
+function unlockEnding(id){
+  const u=JSON.parse(localStorage.getItem('meomeoHCEndings')||'[]');
+  if(!u.includes(id)){u.push(id);localStorage.setItem('meomeoHCEndings',JSON.stringify(u));}
+}
+function showEndingGallery(){
+  const u=JSON.parse(localStorage.getItem('meomeoHCEndings')||'[]');
+  const names={
+    ending_happy:'💛 Happy Home Ending',
+    ending_second:'💙 Second Chance Ending',
+    ending_cats:'🐾 Stray Cat Family',
+    ending_independent:'🌙 Independent Cat',
+    ending_feral:'🔥 Feral King/Queen',
+    ending_guardian:'🛡️ Street Guardian',
+  };
+  const html=Object.keys(names).map(id=>{
+    const ok=u.includes(id);
+    return `<div class="eg-row ${ok?'unlocked':'locked'}"><span>${ok?'✅':'🔒'}</span><span>${names[id]}</span></div>`;
+  }).join('');
+  $('#ending-gallery').remove();
+  $('<div>').attr('id','ending-gallery').html(`
+    <h3>📜 Ending Gallery (${u.length}/6)</h3>${html}
+    <button id="gallery-close">Close</button>
+  `).appendTo('#game');
+  $('#gallery-close').on('click',()=>$('#ending-gallery').remove());
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCENE DATA
+═══════════════════════════════════════════════════════ */
+const SCENES = {
+
+  // ── PROLOGUE ──
+  intro:{
+    bg:'bg-cafe',art:'cafe',cat:'box',pos:'left',sz:210,
+    ch:'🌙 Prologue',chapterStart:true,
+    card:{chapter:'Prologue',title:'A Cold Rainy Night',sub:'The story begins...'},
+    parts:'stars',
+    dl:[
+      {sp:'Narrator',tx:'It was a cold, rainy night at the edge of the city...'},
+      {sp:'Narrator',tx:'A tiny calico kitten sat alone in a soggy cardboard box outside a warm café. Shivering. Alone. Confused.',cat:'box'},
+      {sp:'Narrator',tx:'Her stomach growled. Her paws ached. But those eyes — those eyes still burned with something.'},
+      {sp:'Meomeo',tx:'*mroww...*',sfx:'meow',cat:'scared'},
+      {sp:'System',tx:'⚠ HARDCORE MODE: Fail puzzles → lose lives. Lose all lives → restart chapter. Choose wisely.'},
+      {sp:'Narrator',tx:'Then — footsteps on wet pavement. A warm light approached.'},
+    ], next:'trust_choice'
+  },
+
+  // ── CHAPTER 1: THE FIRST CHOICE ──
+  trust_choice:{
+    bg:'bg-cafe',art:'cafe',cat:'scared',pos:'left',sz:210,
+    ch:'🌙 Chapter 1',chapterStart:true,
+    npcs:[{slot:'right',id:'Lily',mood:'talk',size:200}],
+    parts:'stars',
+    dl:[
+      {sp:'Narrator',tx:'A kind woman knelt beside the box, her eyes soft.',npc:{slot:'right',id:'Lily',mood:'talk',size:200}},
+      {sp:'Lily',tx:'Hey, little one... I won\'t hurt you. I promise.',npc:{slot:'right',id:'Lily',mood:'happy',size:200}},
+      {sp:'Narrator',tx:'Every instinct said run. But something in those eyes felt different.',cat:'scared'},
+      {sp:'Meomeo 💭',tx:'She smells like warm bread and... safety? But I\'ve been tricked before.',cat:'scared'},
+    ],
+    choices:{
+      prompt:'🐾 What does Meomeo do?',
+      opts:[
+        {tx:'💛 Trust her — walk toward the light',
+         next:'human_rescue',cat:'idle',
+         stats:{kindness:1,courage:1},
+         riskLevel:'low',
+         preview:[{tag:'+Kindness',cls:'pos'},{tag:'+Courage',cls:'pos'}],
+         sound:'correct'},
+        {tx:'😾 Refuse — hiss and flee into the night!',
+         next:'stray_begins',cat:'scared',
+         stats:{streetSkill:2,suspicion:-1},
+         riskLevel:'high',
+         preview:[{tag:'+StreetSkill',cls:'pos'},{tag:'Hard Path',cls:'neg'}],
+         sound:'sad'},
+      ]
+    }
+  },
+
+  // ── HOME PATH ──
+  human_rescue:{
+    bg:'bg-home',art:'home',cat:'idle',pos:'left',sz:220,
+    ch:'🏠 Chapter 2',chapterStart:true,
+    npcs:[{slot:'right',id:'Lily',mood:'happy',size:300}],
+    card:{chapter:'Chapter 2',title:'Life with Lily',sub:'Three months of warmth...'},
+    parts:null,
+    dl:[
+      {sp:'Lily',tx:'Oh you poor little thing... You\'re safe now. 🌸',cat:'idle',npc:{slot:'right',id:'Lily',mood:'happy',size:300}},
+      {sp:'Narrator',tx:'Lily. She wrapped Meomeo in a warm towel and brought her home.',npc:{slot:'right',id:'Lily',mood:'talk',size:300}},
+      {sp:'Narrator',tx:'Weeks passed in a soft haze — clean food, gentle hands, a real bed.',cat:'happy',npc:{slot:'right',id:'Lily',mood:'love',size:300}},
+      {sp:'Meomeo',tx:'*purr purr* ♥',sfx:'meow',cat:'love'},
+      {sp:'Narrator',tx:'But one afternoon, Lily sat with a letter. A worried look crossed her face.',npc:{slot:'right',id:'Lily',mood:'sad',size:300}},
+      {sp:'Lily',tx:'Meomeo, darling... I have a job transfer. Far away. I leave next month.',cat:'sad',npc:{slot:'right',id:'Lily',mood:'sad',size:300}},
+      {sp:'Lily',tx:'I need to find you a forever home. Someone who can love you properly. 💔',sfx:'sad',cat:'sad'},
+      {sp:'Meomeo 💭',tx:'...forever home? But this IS home...',cat:'sad'},
+    ], next:'memory_puzzle_intro'
+  },
+
+  memory_puzzle_intro:{
+    bg:'bg-home',art:'home',cat:'sad',pos:'center',sz:200,
+    ch:'🏠 Chapter 2',parts:null,
+    dl:[
+      {sp:'Narrator',tx:'Lily showed Meomeo a photo album. "Remember everything I taught you," she said.'},
+      {sp:'Lily',tx:'I need to know you\'ll be okay. So I\'m going to test you. Show me what you\'ve learned.',npc:{slot:'right',id:'Lily',mood:'talk',size:200}},
+      {sp:'System',tx:'⚠ MEMORY TEST: Match the pairs. Each mistake costs a life!'},
+    ], next:'memory_puzzle_home'
+  },
+
+  adopt_decision:{
+    bg:'bg-home',art:'home',cat:'love',pos:'center',sz:200,
+    ch:'🏠 Chapter 2',parts:'hearts',
+    npcs:[{slot:'left',id:'Lily',mood:'sad',size:200},{slot:'right',id:'Mina',mood:'happy',size:200}],
+    dl:[
+      {sp:'Narrator',tx:'Lily arranged a meeting with Mina — a potential new owner.'},
+      {sp:'Lily',tx:'Mina has prepared everything for you already.',npc:{slot:'left',id:'Lily',mood:'talk',size:200}},
+      {sp:'Mina',tx:'Hi Meomeo... I know I\'m not Lily. But I promise to be gentle.',npc:{slot:'right',id:'Mina',mood:'happy',size:200}},
+      {sp:'Meomeo 💭',tx:'She smells different from Lily. Unfamiliar. But not cruel.',cat:'idle'},
+      {sp:'System',tx:'⚠ Your stats affect which ending you reach. Current kindness matters here.'},
+    ],
+    choices:{
+      prompt:'🏡 What does Meomeo do?',
+      opts:[
+        {tx:'🐾 Walk slowly toward Mina — give her a chance',
+         next:'ending_happy',cat:'love',
+         stats:{kindness:2},
+         riskLevel:'low',
+         preview:[{tag:'+2 Kindness',cls:'pos'},{tag:'Good Ending?',cls:'neu'}],
+         sound:'happy'},
+        {tx:'💔 Freeze — panic and run out the door!',
+         next:'stray_begins',cat:'sad',
+         stats:{suspicion:2,streetSkill:1},
+         riskLevel:'high',
+         preview:[{tag:'+Suspicion',cls:'neg'},{tag:'Street Path',cls:'neu'}],
+         sound:'sad'},
+      ]
+    }
+  },
+
+  // ── STREET PATH ──
+  stray_begins:{
+    bg:'bg-city',art:'city',cat:'sad',pos:'center',sz:215,
+    ch:'🌃 Chapter 3',chapterStart:true,
+    card:{chapter:'Chapter 3',title:'Life on the Streets',sub:'A new kind of freedom...'},
+    parts:'stars',
+    dl:[
+      {sp:'Narrator',tx:'And just like that, Meomeo was on her own.',sfx:'sad',cat:'sad'},
+      {sp:'Narrator',tx:'The city stretched before her — vast, brutal, and indifferent.'},
+      {sp:'Meomeo',tx:'*sniff*... okay. I can do this.',sfx:'meow',cat:'cat_try'},
+      {sp:'Narrator',tx:'But the streets don\'t wait. They test you immediately.'},
+      {sp:'System',tx:'⚠ RIDDLE CHALLENGE: Answer correctly to impress the street cats. Wrong answers cost lives!'},
+    ], next:'riddle_puzzle_1'
+  },
+
+  stray_explore:{
+  bg:'bg-city',art:'city',cat:'determined',pos:'left',sz:205,
+  ch:'🌃 Chapter 3',parts:'stars',
+  npcs:[{slot:'right',id:'Mochi',mood:'happy',size:200}],
+  dl:[
+    {sp:'Narrator',tx:'Meomeo explored deeper, growing bolder each night.'},
+    {sp:'Narrator',tx:'On a moonlit rooftop, she spotted a street cat watching from the shadows.',npc:{slot:'right',id:'Mochi',mood:'talk',size:200}},
+    {sp:'Mochi',tx:'You look new here. Smart enough to know which dumpsters are safe?',npc:{slot:'right',id:'Mochi',mood:'happy',size:200}},
+    {sp:'Meomeo 💭',tx:'She seems okay. Sassy but... real.',cat:'idle'},
+    {sp:'Narrator',tx:'Mochi flicked her tail toward a narrow alley. But from the other direction, Meomeo also smelled food.'},
+  ],
+  choices:{
+    prompt:'🌃 Where should Meomeo go?',
+    opts:[
+      {
+        tx:'🐾 Follow Mochi — meet the street cats',
+        next:'cat_encounter',
+        cat:'determined',
+        stats:{kindness:1},
+        riskLevel:'low',
+        preview:[{tag:'Cat Gang Route',cls:'neu'},{tag:'+Kindness',cls:'pos'}],
+        sound:'correct'
+      },
+      {
+        tx:'🍖 Follow the food smell alone',
+        next:'dog_encounter',
+        cat:'scared',
+        stats:{courage:1},
+        riskLevel:'high',
+        preview:[{tag:'Dog Scene',cls:'neg'},{tag:'+Courage',cls:'pos'}],
+        sound:'trans'
+      }
+    ]
+  }
+ },
+
+  cat_encounter:{
+    bg:'bg-alley',art:'alley',cat:'scared',pos:'center',sz:195,
+    ch:'🐾 Chapter 4',chapterStart:true,
+    npcs:[{slot:'left',id:'Mochi',mood:'talk',size:200},{slot:'right',id:'Shadow',mood:'scared',size:200}],
+    card:{chapter:'Chapter 4',title:'Join the Gang?',sub:'Prove you belong on these streets'},
+    parts:'stars',
+    dl:[
+      {sp:'Narrator',tx:'Mochi led Meomeo to a group of street cats in a back alley.',npcs:[{slot:'left',id:'Mochi',mood:'talk',size:200},{slot:'right',id:'Shadow',mood:'scared',size:200}]},
+      {sp:'Shadow',tx:'House cats don\'t last long here. You\'re soft.',npc:{slot:'right',id:'Shadow',mood:'talk',size:200}},
+      {sp:'Mochi',tx:'Shadow, stop. Give her a chance to prove herself.',npc:{slot:'left',id:'Mochi',mood:'happy',size:200}},
+      {sp:'Shadow',tx:'Three tests. Pass them all. No second chances.',cat:'scared',npc:{slot:'right',id:'Shadow',mood:'scared',size:200}},
+     {sp:'System',tx:'⚠ CAT SURVIVAL TEST: Choose the safest actions to prove you belong with the street cats!'},
+     ], next:'cat_puzzle'
+  },
+
+  dog_encounter:{
+    bg:'bg-alley',art:'alley',cat:'scared',pos:'left',sz:205,
+    ch:'⚠️ Danger!',chapterStart:false,
+    npcs:[{slot:'right',id:'Bruno',mood:'scared',size:200}],
+    parts:'stars',
+    dl:[
+      {sp:'Narrator',tx:'Meomeo turned into a narrow alley, nose following food scent...'},
+      {sp:'Narrator',tx:'Then — a low, rumbling growl echoed off the brick walls.',npc:{slot:'right',id:'Bruno',mood:'scared',size:200}},
+      {sp:'Bruno',tx:'*GRRRRR...*',cat:'scared',npc:{slot:'right',id:'Bruno',mood:'scared',size:200}},
+      {sp:'Narrator',tx:'A stray dog stepped from the shadows. Teeth bared. Eyes locked.'},
+      {sp:'System',tx:'⚠ STEALTH CHALLENGE: Watch for the safe window. React fast or lose a life!'},
+    ], next:'stealth_puzzle_dog'
+  },
+
+  food_search:{
+    bg:'bg-city',art:'city',cat:'idle',pos:'left',sz:205,
+    ch:'🍽️ Survival',parts:'fish',
+    dl:[
+      {sp:'Narrator',tx:'Safe — for now. But hunger gnaws at Meomeo\'s belly.',cat:'idle'},
+      {sp:'Narrator',tx:'She needs food before continuing. The city holds dangers and rewards.'},
+      {sp:'Meomeo 💭',tx:'I smell something nearby... three sources. Choose carefully.',sfx:'meow',cat:'idle'},
+      {sp:'System',tx:'⚠ Pick wisely. Some food is poisoned. Wrong choice = lose 1 HP.'},
+    ], next:'food_puzzle_hc'
+  },
+
+  final_choice:{
+    bg:'bg-city',art:'city',cat:'idle',pos:'center',sz:220,
+    ch:'🌟 Final Chapter',chapterStart:true,
+    card:{chapter:'Final Chapter',title:'The Crossroads',sub:'What does Meomeo really want?'},
+    parts:'stars',
+    dl:[
+      {sp:'Narrator',tx:'Meomeo pauses under a golden streetlight, the city quiet around her.'},
+      {sp:'Narrator',tx:'After everything — fear, freedom, loneliness, discovery — she has grown.'},
+      {sp:'Narrator',tx:'On the night breeze, something catches her nose. Warm food. Soft fabric. A home — close.'},
+      {sp:'Meomeo 💭',tx:'I know this smell... warmth. Safety. People who care.',cat:'idle'},
+      {sp:'Narrator',tx:'But she has also tasted freedom. She knows who she is now.'},
+      {sp:'Meomeo 💭',tx:'What kind of life do I want to live?',cat:'determined'},
+    ],
+    choices:{
+      prompt:'🌟 What does Meomeo choose?',
+      opts:[
+        {tx:'🏠 Follow the scent — seek a home',
+         action:'finalHome',cat:'love',
+         stats:{kindness:1},
+         riskLevel:'low',
+         preview:[{tag:'Kindness matters',cls:'neu'},{tag:'+1 Kindness',cls:'pos'}],
+         sound:'correct'},
+        {tx:'🌙 Stay free — claim the night',
+         action:'finalFree',cat:'determined',
+         stats:{courage:1,streetSkill:1},
+         riskLevel:'high',
+         preview:[{tag:'+Courage',cls:'pos'},{tag:'+StreetSkill',cls:'pos'},{tag:'Risky',cls:'neg'}],
+         sound:'trans'},
+      ]
+    }
+  },
+
+  oldman_meet:{
+    bg:'bg-dawn',art:'city',cat:'idle',pos:'left',sz:210,
+    ch:'💙 Second Chance',
+    npcs:[{slot:'right',id:'OldMan',mood:'happy',size:180}],
+    card:{chapter:'Second Chance',title:'A Warm Light',sub:'Someone has been waiting'},
+    parts:'hearts',
+    dl:[
+      {sp:'Narrator',tx:'Meomeo followed the warm scent through quiet streets.'},
+      {sp:'Narrator',tx:'An elderly man was placing a bowl of food beside his door.',npc:{slot:'right',id:'OldMan',mood:'happy',size:180}},
+      {sp:'Old Man',tx:'There you are, little one. I was wondering when you\'d come.',npc:{slot:'right',id:'OldMan',mood:'talk',size:180}},
+      {sp:'Meomeo 💭',tx:'His voice is soft... and the food smells warm.',cat:'idle'},
+      {sp:'Old Man',tx:'You don\'t have to run tonight. You can rest here.',npc:{slot:'right',id:'OldMan',mood:'happy',size:180}},
+      {sp:'Narrator',tx:'For the first time in many nights, Meomeo stepped toward the light.'},
+    ], next:'ending_second'
+  },
+
+  feral_path:{
+    bg:'bg-midnight',art:'city',cat:'determined',pos:'center',sz:215,
+    ch:'🔥 The Dark Path',
+    parts:'sparks',
+    dl:[
+      {sp:'Narrator',tx:'Meomeo chose power over peace. She made her way to the old warehouse district.'},
+      {sp:'Narrator',tx:'The feral cats there had no home — but they had territory. Respect. Strength.'},
+      {sp:'Meomeo 💭',tx:'If I\'m going to live on the streets... I\'m going to rule them.',cat:'determined'},
+      {sp:'System',tx:'⚠ FINAL TEST: The feral leader will challenge you. Survive and earn your place.'},
+    ], next:'stealth_puzzle_feral'
+  },
+
+  guardian_path:{
+    bg:'bg-alley',art:'alley',cat:'determined',pos:'center',sz:215,
+    ch:'🛡️ Guardian',
+    parts:'paws',
+    dl:[
+      {sp:'Narrator',tx:'With high Street Skill and Courage, Meomeo realized something.'},
+      {sp:'Narrator',tx:'The younger stray cats around her were helpless. Scared. Lost.'},
+      {sp:'Narrator',tx:'Like she once was.'},
+      {sp:'Meomeo 💭',tx:'I know every safe alley. Every feeding spot. Every danger.',cat:'determined'},
+      {sp:'Meomeo 💭',tx:'Maybe... I could help them.',cat:'happy'},
+    ], next:'ending_guardian'
+  },
+};
+
+/* ═══════════════════════════════════════════════════════
+   ENDINGS
+═══════════════════════════════════════════════════════ */
+const ENDINGS = {
+  ending_happy:{
+    bg:'bg-warm',parts:'hearts',badge:'✨ Ending 1 of 6 ✨',
+    title:'Happy Home Ending!',col:'#f8d870',
+    text:'You opened your heart. Meomeo curled up in her very own soft bed, purring so loudly the whole room filled with warmth. She had finally found where she belonged. 💛',
+    quote:'"Thank you for choosing me."'
+  },
+  ending_second:{
+    bg:'bg-dawn',parts:'hearts',badge:'💙 Ending 2 of 6 💙',
+    title:'Second Chance Ending!',col:'#90c8f8',
+    text:'Following a warm scent, Meomeo found an elderly man who had been leaving food out every night. He opened his door — and after everything, Meomeo stepped inside. 💙',
+    quote:'"Another chance at love."'
+  },
+  ending_cats:{
+    bg:'bg-twilight',parts:'paws',badge:'🐾 Ending 3 of 6 🐾',
+    title:'Stray Cat Family!',col:'#c0a8f8',
+    text:'Meomeo proved herself to the gang. They welcomed her as one of their own. They shared food, warmth, and kept each other safe. Family isn\'t always four walls. 🐾',
+    quote:'"Family isn\'t always a house."'
+  },
+  ending_independent:{
+    bg:'bg-midnight',parts:'sparks',badge:'🌙 Ending 4 of 6 🌙',
+    title:'Independent Cat!',col:'#b0a0e0',
+    text:'Meomeo turned away from every scent and walked forward — strong, wise, entirely her own. The city stretched before her, full of possibility. She was free. 🌙',
+    quote:'"Some souls are born to roam."'
+  },
+  ending_feral:{
+    bg:'bg-midnight',parts:'sparks',badge:'🔥 Ending 5 of 6 🔥',
+    title:'Feral King/Queen!',col:'#ff8040',
+    text:'Meomeo defeated every challenger. The warehouse district became her kingdom. No human would ever own her again — she owned the night itself. 🔥',
+    quote:'"Bow to no one. Fear nothing."'
+  },
+  ending_guardian:{
+    bg:'bg-twilight',parts:'paws',badge:'🛡️ Ending 6 of 6 🛡️',
+    title:'Street Guardian!',col:'#60d080',
+    text:'Meomeo became something rare — a cat who had learned every lesson the streets could teach, and chose to use that knowledge to protect others. The kittens called her Guardian. 🛡️',
+    quote:'"Strength means lifting others."'
+  },
+};
+
+/* ═══════════════════════════════════════════════════════
+   GAME ENGINE — SCENE LOADER
+═══════════════════════════════════════════════════════ */
+function loadScene(id){
+  if(ENDINGS[id]){showEnding(id);return;}
+  // Puzzle dispatchers
+  if(id==='memory_puzzle_home'){showMemoryPuzzle('home');return;}
+  if(id==='riddle_puzzle_1'){showRiddlePuzzle();return;}
+  if(id==='drag_puzzle_survival'){showDragPuzzle();return;}
+  if(id==='stealth_puzzle_dog'){showStealthPuzzle('dog');return;}
+  if(id==='stealth_puzzle_feral'){showStealthPuzzle('feral');return;}
+  if(id==='food_puzzle_hc'){showFoodPuzzle();return;}
+  if(id==='cat_puzzle'){showCatPuzzle();return;}
+
+  const sc=SCENES[id];
+  if(!sc){showToast('⚠ Scene not found: '+id,5000);return;}
+
+  hideAllNPCs();
+  G.sceneId=id; G.dlIdx=0; G.dlQueue=sc.dl||[]; G.choices=sc.choices||null;
+
+  // Mark chapter start for retry
+  if(sc.chapterStart) G.chapterStartScene=id;
+
+  $('#bg').attr('class',sc.bg);
+  setArt(sc.art);
+  clearParticles(); spawnStars(50);
+  if(sc.parts && sc.parts!=='stars') spawnFloat(sc.parts,14);
+  $('#chapter-tag').text(sc.ch);
+
+  posCat(sc.pos||'center',sc.sz||220);
+  $('#cat-area').catExpr(sc.cat||'idle').show();
+
+  if(sc.npcs) sc.npcs.forEach(n=>showNPC(n.slot||'right',n.id,n.mood||'idle',n.size||170));
+
+  $('#dialogue-wrap').show();
+  $('#choice-panel').hide();
+  $('#puzzle-panel').hide().css('display','none');
+  $('#ending-screen').hide();
+  $('#fail-overlay').hide();
+  stopAuto();
+  updateStatsHUD(); updateLivesHUD();
+
+  if(sc.card) showChapterCard(sc.card.chapter,sc.card.title,sc.card.sub,()=>showDlLine());
+  else showDlLine();
+}
+
+function showDlLine(){
+  if(G.dlIdx >= G.dlQueue.length){
+    if(G.choices) showChoices(G.choices);
+    else{
+      const sc=SCENES[G.sceneId];
+      if(sc?.next){
+        if(G.skipOn) loadScene(sc.next);
+        else fadeTransition(()=>loadScene(sc.next));
+      }
+    }
+    return;
+  }
+  const ln=G.dlQueue[G.dlIdx++];
+  setSpeaker(ln.sp||'Narrator');
+  if(ln.cat) $('#cat-area').catExpr(ln.cat);
+  if(ln.npc?.id) showNPC(ln.npc.slot||'right',ln.npc.id,ln.npc.mood||'idle',ln.npc.size||170);
+  if(ln.npcs&&Array.isArray(ln.npcs)) ln.npcs.forEach(n=>showNPC(n.slot||'right',n.id,n.mood||'idle',n.size||170));
+  if(ln.sfx==='meow') SFX.meow();
+  else if(ln.sfx==='sad') SFX.sad();
+  else if(ln.sfx==='happy') SFX.happy();
+  addToLog(ln.sp||'Narrator',ln.tx);
+  const spd=G.skipOn?2:G.textSpeed;
+  $('#dialogue-text').typewrite(ln.tx,spd,()=>{if(G.autoOn&&!G.skipOn) startAutoTimer();});
+  if(G.skipOn) setTimeout(()=>showDlLine(),60);
+}
+
+function nextDialogue(){
+  SFX.click();
+  const wasDone=$('#dialogue-text').skipTypewrite();
+  if(!wasDone) return;
+  stopAutoTimer();
+  showDlLine();
+}
+
+function showChoices(cd){
+  stopAuto();
+  $('#dialogue-wrap').hide();
+  const $cp=$('#choice-panel').show();
+  $('#choice-prompt').text(cd.prompt);
+  const $cg=$('#choices-grid').empty();
+  $cg.toggleClass('single',cd.opts.length===1);
+  cd.opts.forEach((o,i)=>{
+    const $btn=$('<button>').addClass('choice-btn').addClass(o.riskLevel==='high'?'risk-high':o.riskLevel==='low'?'risk-low':'');
+    $btn.append($('<div>').text(o.tx));
+    if(o.preview&&o.preview.length){
+      const $prev=$('<div>').addClass('choice-stat-preview');
+      o.preview.forEach(p=>$('<span>').addClass('csp-tag '+p.cls).text(p.tag).appendTo($prev));
+      $btn.append($prev);
+    }
+    $btn.on('click',()=>pickChoice(i)).appendTo($cg);
+  });
+}
+
+function pickChoice(i){
+  SFX.click();
+  const sc=SCENES[G.sceneId];
+  if(!sc?.choices) return;
+  const opt=sc.choices.opts[i];
+  if(opt.cat) $('#cat-area').catExpr(opt.cat);
+  if(opt.stats) Object.keys(opt.stats).forEach(stat=>modStat(stat,opt.stats[stat]));
+  if(opt.sound==='correct') SFX.correct();
+  else if(opt.sound==='sad') SFX.sad();
+  else if(opt.sound==='happy') SFX.happy();
+  else if(opt.sound==='trans') SFX.trans();
+
+  if(opt.action==='finalHome'){
+    fadeTransition(()=>loadScene(decideFinalEnding('home')));return;
+  }
+  if(opt.action==='finalFree'){
+    fadeTransition(()=>loadScene(decideFinalEnding('free')));return;
+  }
+  fadeTransition(()=>loadScene(opt.next));
+}
+
+ function decideFinalEnding(pref){
+  if(pref === 'home'){
+    if(G.kindness >= 3) return 'oldman_meet';
+    if(G.kindness >= 1) return 'ending_second';
+    return 'ending_second';
+  }
+
+  if(pref === 'free'){
+    if(G.kindness >= 2 && G.streetSkill >= 4) return 'guardian_path';
+    if(G.streetSkill >= 4 && G.courage >= 4) return 'feral_path';
+    return 'ending_independent';
+  }
+
+  return 'ending_independent';
+}
+
+/* ═══════════════════════════════════════════════════════
+   AUTO / SKIP
+═══════════════════════════════════════════════════════ */
+function startAutoTimer(){
+  stopAutoTimer();
+  G.autoTimer=setTimeout(()=>{if(G.autoOn)nextDialogue();},G.autoSpeed);
+}
+function stopAutoTimer(){clearTimeout(G.autoTimer);G.autoTimer=null;}
+function stopAuto(){
+  G.autoOn=false;G.skipOn=false;
+  $('#auto-btn').removeClass('active');$('#skip-btn').removeClass('active');
+  $('#auto-indicator').hide();$('#skip-indicator').hide();
+  stopAutoTimer();
+}
+
+/* ═══════════════════════════════════════════════════════
+   PUZZLE 1: MEMORY MATCH
+═══════════════════════════════════════════════════════ */
+const MEM_SETS = {
+  home:{
+    pairs:[
+      {id:'a',face:'🐾',label:'Paws'},
+      {id:'b',face:'🐟',label:'Fish'},
+      {id:'c',face:'🏠',label:'Home'},
+      {id:'d',face:'🌙',label:'Moon'},
+      {id:'e',face:'💜',label:'Love'},
+      {id:'f',face:'🌿',label:'Plant'},
+    ],
+    title:'🧠 Lily\'s Memory Test',
+    desc:'Lily is testing your memory. Match all pairs before time runs out! Each wrong match costs a life.',
+    timeLimit:40,
+    cols:4,
+  }
+};
+
+let memState={};
+function showMemoryPuzzle(type){
+  const def=MEM_SETS[type];
+  setArt('home');$('#bg').attr('class','bg-home');
+  $('#cat-area').catExpr('cat_try');posCat('right',160);
+  showNPC('left','Lily','talk',160);
+  clearParticles();spawnStars(40);
+  $('#chapter-tag').text('🧠 Memory Test');
+  $('#dialogue-wrap').hide();$('#choice-panel').hide();
+  $('#fail-overlay').hide();
+
+  // Build shuffled deck
+  const pairs=[...def.pairs,...def.pairs].map(p=>({...p,uid:Math.random()}));
+  pairs.sort(()=>Math.random()-.5);
+
+  memState={
+    type,def,pairs,
+    flipped:[],matched:[],
+    mistakes:0,
+    timeLeft:def.timeLimit,
+    locked:false,
+    timer:null,
+  };
+
+  renderMemoryPuzzle();
+}
+
+function renderMemoryPuzzle(){
+  const {def,pairs}=memState;
+  const $pp=$('#puzzle-panel').empty().css('display','flex');
+
+  $('<div>').addClass('puz-title').text(def.title).appendTo($pp);
+  $('<div>').addClass('puz-desc').html(`${def.desc}<br><strong>Pairs: ${def.pairs.length} • Time: ${def.timeLimit}s</strong>`).appendTo($pp);
+
+  // Timer bar
+  const $tbar=$('<div>').addClass('puz-timer-bar').appendTo($pp);
+  $('<div>').attr('id','puz-timer-fill').css('width','100%').appendTo($tbar);
+  $('<div>').attr('id','mem-timer-num').css({textAlign:'center',fontSize:'.8rem',fontWeight:800,
+    color:'rgba(200,168,255,.8)',marginTop:'4px'}).text(def.timeLimit+'s').appendTo($pp);
+
+  const cols=def.cols||4;
+  const $grid=$('<div>').addClass('mem-grid').css({'grid-template-columns':`repeat(${cols},1fr)`,maxWidth:'500px'}).appendTo($pp);
+
+  pairs.forEach((p,i)=>{
+    $('<div>').addClass('mem-card').attr({'data-idx':i,'data-id':p.id})
+      .append($('<div>').addClass('mc-face').text(p.face))
+      .on('click',function(){memFlip($(this),i)})
+      .appendTo($grid);
+  });
+
+  const $stat=$('<div>').addClass('stat-row').appendTo($pp);
+  $stat.append($('<span>').attr('id','mem-stat').text('Mistakes: 0 | Lives: '+G.lives));
+  $('<div>').attr('id','mem-msg').appendTo($pp);
+
+  // Start timer
+  memState.timer=setInterval(()=>{
+    memState.timeLeft--;
+    const pct=memState.timeLeft/def.timeLimit*100;
+    $('#puz-timer-fill').css('width',pct+'%');
+    $('#mem-timer-num').text(memState.timeLeft+'s');
+    if(memState.timeLeft<=10) $('#puz-timer-fill').css('background','linear-gradient(90deg,#ff4060,#ff8040)');
+    if(memState.timeLeft<=5) SFX.tick();
+    if(memState.timeLeft<=0){
+      clearInterval(memState.timer);
+      memTimedOut();
+    }
+  },1000);
+}
+
+function memFlip($el,idx){
+  if(memState.locked) return;
+  if($el.hasClass('flipped')||$el.hasClass('matched')) return;
+  if(memState.flipped.length>=2) return;
+
+  SFX.click();
+  $el.addClass('flipped');
+  memState.flipped.push({el:$el,idx,id:memState.pairs[idx].id});
+
+  if(memState.flipped.length===2){
+    memState.locked=true;
+    const [a,b]=memState.flipped;
+    if(a.id===b.id&&a.idx!==b.idx){
+      // Match!
+      SFX.correct();flashScreen();
+      a.el.addClass('matched');b.el.addClass('matched');
+      memState.matched.push(a.id);
+      memState.flipped=[];memState.locked=false;
+      spawnFloat('sparks',6);
+      if(memState.matched.length===memState.def.pairs.length){
+        clearInterval(memState.timer);
+        memCompleted();
+      }
+    } else {
+      // No match
+      memState.mistakes++;
+      SFX.wrong();shakeScreen();
+      $('#mem-stat').text('Mistakes: '+memState.mistakes+' | Lives: '+G.lives);
+      $('#mem-msg').html('<div class="p-msg bad">Not a match! 💀 Life -1</div>');
+      loseLife('Wrong memory match!');
+      if(G.lives>0){
+        setTimeout(()=>{
+          a.el.removeClass('flipped');b.el.removeClass('flipped');
+          memState.flipped=[];memState.locked=false;
+          $('#mem-msg').empty();
+        },1000);
+      }
+    }
+  }
+}
+
+function memTimedOut(){
+  if(G.lives>0) loseLife('Memory test timed out!');
+  setTimeout(()=>{
+    if(G.lives>0){
+      clearInterval(memState.timer);
+      renderMemoryPuzzle(); // restart round
+    }
+  },1500);
+}
+function memCompleted(){
+  SFX.tada();$('#cat-area').catExpr('happy');
+  modStat('kindness',1);modStat('courage',1);
+  clearInterval(memState.timer);
+  $('#mem-msg').html('<div class="p-msg ok">🎉 Perfect memory! Lily is impressed!</div>');
+  setTimeout(()=>fadeTransition(()=>loadScene('adopt_decision')),2000);
+}
+
+/* ═══════════════════════════════════════════════════════
+   PUZZLE 2: RIDDLES
+═══════════════════════════════════════════════════════ */
+const RIDDLES=[
+  {
+    question:'I have no mouth, but I can swallow you whole. I have no legs, but I stretch through every alley. What am I?',
+    opts:['The night fog','A storm drain','A garbage bag','A shadow'],
+    answer:0,
+    hint:'Cats know me well on cold evenings...'
+  },
+  {
+    question:'A cat who runs from every danger never finds food. A cat who attacks everything is always injured. What does a smart cat do?',
+    opts:['Run fast always','Fight only the weak','Observe, then choose carefully','Ask humans for help'],
+    answer:2,
+    hint:'Patience is the greatest street skill.'
+  },
+  {
+    question:'You see three food sources: a bowl near a human, scraps near other cats, and fresh fish alone in an alley. Which is most dangerous?',
+    opts:['Bowl near human — trap!','Scraps with cats — they\'ll fight','Fish alone — too good to be true','None, all are safe'],
+    answer:2,
+    hint:'If something looks perfect with no competition...'
+  },
+  {
+    question:'On a cold night, a stray cat finds a warm vent to sleep beside. Why might this be risky?',
+    opts:['Other cats want it too','Vents belong to buildings with dogs','Warm spots attract all kinds of trouble','It\'ll make you too comfortable to survive'],
+    answer:2,
+    hint:'Warmth attracts more than just cats...'
+  },
+];
+
+let riddleState={};
+function showRiddlePuzzle(){
+  setArt('city');$('#bg').attr('class','bg-city');
+  $('#cat-area').catExpr('scared');posCat('center',200);
+  showNPC('left','Mochi','talk',150);
+  clearParticles();spawnStars(50);
+  $('#chapter-tag').text('🧩 Street Wisdom Test');
+  $('#dialogue-wrap').hide();$('#choice-panel').hide();
+
+  riddleState={idx:0,mistakes:0};
+  renderRiddle();
+}
+
+function renderRiddle(){
+  if(riddleState.idx>=RIDDLES.length){
+    riddleCompleted();return;
+  }
+  const r=RIDDLES[riddleState.idx];
+  const $pp=$('#puzzle-panel').empty().css('display','flex');
+  $('<div>').addClass('puz-title').text('🧩 Street Wisdom').appendTo($pp);
+  $('<div>').addClass('puz-desc').text(`Question ${riddleState.idx+1} of ${RIDDLES.length} — wrong answer costs a life!`).appendTo($pp);
+  const $box=$('<div>').addClass('riddle-box').appendTo($pp);
+  $('<div>').addClass('riddle-text').text('"'+r.question+'"').appendTo($box);
+  const $opts=$('<div>').addClass('riddle-opts').appendTo($box);
+  r.opts.forEach((opt,i)=>{
+    $('<button>').addClass('riddle-opt').text(opt)
+      .on('click',()=>checkRiddle(i,r)).appendTo($opts);
+  });
+  $('<div>').attr('id','riddle-hint').css({fontSize:'.74rem',color:'rgba(200,168,255,.5)',
+    fontWeight:800,textAlign:'center',fontStyle:'italic',marginTop:'6px'}).text('💡 '+r.hint).appendTo($pp);
+  $('<div>').attr('id','riddle-msg').appendTo($pp);
+  $('<div>').addClass('stat-row').append($('<span>').text('Mistakes: '+riddleState.mistakes+' | Lives: '+G.lives)).appendTo($pp);
+}
+
+function checkRiddle(i,r){
+  $('.riddle-opt').prop('disabled',true);
+  if(i===r.answer){
+    SFX.correct();flashScreen();
+    $('.riddle-opt').eq(i).addClass('correct');
+    modStat('streetSkill',1);
+    $('#riddle-msg').html('<div class="p-msg ok">✅ Correct! Street wisdom grows.</div>');
+    setTimeout(()=>{riddleState.idx++;renderRiddle();},1500);
+  } else {
+    SFX.wrong();shakeScreen();
+    $('.riddle-opt').eq(i).addClass('wrong');
+    $('.riddle-opt').eq(r.answer).addClass('correct');
+    riddleState.mistakes++;
+    $('#riddle-msg').html('<div class="p-msg bad">❌ Wrong! 💀 Life -1</div>');
+    loseLife('Wrong riddle answer!');
+    if(G.lives>0){
+      setTimeout(()=>{riddleState.idx++;renderRiddle();},2000);
+    }
+  }
+}
+function riddleCompleted(){
+  SFX.tada();$('#cat-area').catExpr('happy');
+  $('#puzzle-panel').html('<div style="display:flex;flex-direction:column;align-items:center;gap:18px;padding:30px;"><div class="puz-title">🎉 Street Smart!</div><div class="p-msg ok" style="max-width:440px">Meomeo passed every riddle. The street cats nod with grudging respect.</div></div>').css('display','flex');
+  modStat('streetSkill',1);modStat('courage',1);
+  setTimeout(()=>fadeTransition(()=>loadScene('stray_explore')),2500);
+}
+
+/* ═══════════════════════════════════════════════════════
+   PUZZLE 3: DRAG & DROP
+═══════════════════════════════════════════════════════ */
+const DRAG_CONFIG = {
+  survival:{
+    title:'🎒 Build Your Survival Kit',
+    desc:'Drag each item to the correct category. Wrong placements cost a life!',
+    items:[
+      {id:'item_fish',   icon:'🐟',label:'Fish Scraps',  category:'food'},
+      {id:'item_box',    icon:'📦',label:'Cardboard Box', category:'shelter'},
+      {id:'item_string', icon:'🧶',label:'Yarn Ball',     category:'toy'},
+      {id:'item_water',  icon:'💧',label:'Water Puddle',  category:'food'},
+      {id:'item_pipe',   icon:'🔩',label:'Drain Pipe',    category:'shelter'},
+      {id:'item_leaf',   icon:'🍃',label:'Dry Leaves',    category:'shelter'},
+    ],
+    slots:[
+      {id:'food',    label:'🍖 Food',    icon:'🍽️'},
+      {id:'shelter', label:'🏠 Shelter', icon:'🏕️'},
+      {id:'toy',     label:'🎮 Play',    icon:'🎯'},
+    ]
+  }
+};
+
+let dragState={};
+function showDragPuzzle(){
+  setArt('alley');$('#bg').attr('class','bg-alley');
+  $('#cat-area').catExpr('cat_try');posCat('left',190);
+  showNPC('right','Shadow','talk',160);
+  clearParticles();spawnStars(40);
+  $('#chapter-tag').text('🎒 Survival Kit');
+  $('#dialogue-wrap').hide();$('#choice-panel').hide();
+
+  const cfg=DRAG_CONFIG.survival;
+  dragState={cfg,placed:{},mistakes:0,dragging:null};
+  renderDragPuzzle(cfg);
+}
+
+function renderDragPuzzle(cfg){
+  const $pp=$('#puzzle-panel').empty().css('display','flex');
+  $('<div>').addClass('puz-title').text(cfg.title).appendTo($pp);
+  $('<div>').addClass('puz-desc').text(cfg.desc).appendTo($pp);
+  $('<div>').addClass('stat-row').append($('<span>').attr('id','drag-stat').text('Mistakes: 0 | Lives: '+G.lives)).appendTo($pp);
+  const $da=$('<div>').addClass('dd-area').appendTo($pp);
+
+  // Items to drag
+  const $items=$('<div>').addClass('dd-items-row').appendTo($da);
+  cfg.items.forEach(item=>{
+    if(dragState.placed[item.id]) return; // skip already placed
+    const $it=$('<div>').addClass('dd-item').attr({'data-item':item.id,'draggable':true})
+      .append($('<span>').text(item.icon+' '))
+      .append($('<span>').text(item.label))
+      .on('dragstart',function(e){
+        dragState.dragging=item.id;
+        $(this).addClass('dragging');
+        e.originalEvent.dataTransfer.setData('text',item.id);
+      })
+      .on('dragend',function(){$(this).removeClass('dragging');})
+      .appendTo($items);
+  });
+
+  // Drop slots
+  const $slots=$('<div>').addClass('dd-slots').appendTo($da);
+  cfg.slots.forEach(slot=>{
+    const $slot=$('<div>').addClass('dd-slot').attr('data-slot',slot.id)
+      .append($('<span>').addClass('dd-slot-icon').text(slot.icon))
+      .append($('<span>').addClass('dd-slot-label').text(slot.label))
+      .append($('<span>').addClass('dd-slot-drop').attr('id','drop-'+slot.id).text('drop here'));
+    $slot.on('dragover',function(e){e.preventDefault();$(this).addClass('drag-over');})
+      .on('dragleave',function(){$(this).removeClass('drag-over');})
+      .on('drop',function(e){
+        e.preventDefault();$(this).removeClass('drag-over');
+        const itemId=e.originalEvent.dataTransfer.getData('text');
+        handleDrop(itemId,slot.id,$(this));
+      });
+    $slots.append($slot);
+  });
+
+  $('<div>').attr('id','drag-msg').appendTo($pp);
+}
+
+function handleDrop(itemId,slotId,$slot){
+  const cfg=dragState.cfg;
+  const item=cfg.items.find(i=>i.id===itemId);
+  if(!item||dragState.placed[itemId]) return;
+  SFX.click();
+  if(item.category===slotId){
+    SFX.correct();flashScreen();
+    dragState.placed[itemId]=slotId;
+    $slot.addClass('correct');
+    $('#drop-'+slotId).text(item.icon+' '+item.label);
+    $('[data-item="'+itemId+'"]').addClass('placed');
+    spawnFloat('sparks',5);
+    const total=cfg.items.length;
+    const done=Object.keys(dragState.placed).length;
+    $('#drag-msg').html(`<div class="p-msg ok">✅ Correct! (${done}/${total})</div>`);
+    if(done>=total){
+      setTimeout(()=>dragCompleted(),1500);
+    }
+  } else {
+    SFX.wrong();shakeScreen();
+    $slot.addClass('wrong-s');
+    setTimeout(()=>$slot.removeClass('wrong-s'),400);
+    dragState.mistakes++;
+    $('#drag-stat').text('Mistakes: '+dragState.mistakes+' | Lives: '+G.lives);
+    $('#drag-msg').html('<div class="p-msg bad">❌ Wrong category! 💀 Life -1</div>');
+    loseLife('Misplaced survival item!');
+    if(G.lives>0){
+      // Re-render with remaining items
+      renderDragPuzzle(cfg);
+    }
+  }
+}
+function dragCompleted(){
+  SFX.tada();$('#cat-area').catExpr('happy');
+  addItem('sardine'); // reward
+  modStat('streetSkill',2);modStat('courage',1);
+  $('#puzzle-panel').html('<div style="display:flex;flex-direction:column;align-items:center;gap:18px;padding:30px;"><div class="puz-title">🎒 Kit Complete!</div><div class="p-msg ok" style="max-width:440px">Meomeo sorted every item perfectly. Shadow grunts: "Maybe you\'re not useless after all."</div><div class="p-msg warn" style="max-width:440px">📦 Found: Sardine!</div></div>').css('display','flex');
+  setTimeout(()=>fadeTransition(()=>loadScene('food_search')),2500);
+}
+
+/* ═══════════════════════════════════════════════════════
+   PUZZLE 4: STEALTH / TIMED REACTION
+═══════════════════════════════════════════════════════ */
+const STEALTH_CONFIGS={
+  dog:{
+    title:'🐕 Dog Encounter!',
+    desc:'The dog patrols. Wait for the safe window, then hide! Act too early or too late = lose a life.',
+    phases:['DANGER — eyes on you! Stay still.','SAFE — now! Hide quickly!','WARNING — it\'s turning back!'],
+    phaseTimes:[1800,1200,700],
+    timeLimit:14,
+    safePhaseName:'SAFE',
+    buttons:[
+      {id:'hide',icon:'📦',label:'Hide\nNow'},
+      {id:'run', icon:'🏃',label:'Run\nAway'},
+    ]
+  },
+  feral:{
+    title:'🔥 Alpha Challenge!',
+    desc:'The feral leader charges in waves. Dodge at the right moment! Timing is everything.',
+    phases:['CHARGING — incoming attack!','DODGE WINDOW — move now!','RECOVERING — wait for next...'],
+    phaseTimes:[2000,900,800],
+    timeLimit:16,
+    safePhaseName:'DODGE WINDOW',
+    buttons:[
+      {id:'dodge',icon:'💨',label:'Dodge!'},
+      {id:'counter',icon:'⚡',label:'Counter!'},
+    ]
+  }
+};
+
+const CIRC=2*Math.PI*34;
+let stealthState={};
+function showStealthPuzzle(type){
+  const cfg=STEALTH_CONFIGS[type];
+  setArt('alley');$('#bg').attr('class','bg-alley');
+  $('#cat-area').catExpr('scared');posCat('left',200);
+  if(type==='dog') showNPC('right','Bruno','scared',190);
+  else showNPC('right','Shadow','angry',190);
+  clearParticles();spawnStars(40);
+  $('#chapter-tag').text(cfg.title);
+  $('#dialogue-wrap').hide();$('#choice-panel').hide();
+
+  stealthState={cfg,type,phase:0,safeNow:false,done:false,timeLeft:cfg.timeLimit,actions:0};
+
+  const $pp=$('#puzzle-panel').empty().css('display','flex');
+  $('<div>').addClass('puz-title').text(cfg.title).appendTo($pp);
+  $('<div>').addClass('puz-desc').html(cfg.desc).appendTo($pp);
+
+  // Phase indicator
+  $('<div>').addClass('stealth-status danger').attr('id','stealth-status').text(cfg.phases[0]).appendTo($pp);
+
+  // Timer ring
+  const $ring=$('<div>').addClass('timer-ring').appendTo($pp);
+  $ring.append(`<svg class="t-svg" width="80" height="80" viewBox="0 0 80 80">
+    <circle class="t-bg" cx="40" cy="40" r="34"/>
+    <circle class="t-arc" id="t-arc" cx="40" cy="40" r="34" stroke="#a060ff" stroke-dasharray="${CIRC}" stroke-dashoffset="0"/>
+  </svg>`);
+  $ring.append($('<div>').addClass('t-num').attr('id','t-num').text(cfg.timeLimit));
+
+  const $row=$('<div>').addClass('stealth-row').appendTo($pp);
+  cfg.buttons.forEach(btn=>{
+    $('<button>').addClass('stealth-btn').attr('id','sb-'+btn.id)
+      .append($('<div>').addClass('sbi').text(btn.icon))
+      .append($('<div>').addClass('sbl').text(btn.label))
+      .on('click',()=>stealthAct(btn.id))
+      .appendTo($row);
+  });
+
+  $('<div>').attr('id','stealth-msg').appendTo($pp);
+  $('<div>').addClass('stat-row').append($('<span>').attr('id','stealth-stat').text('Lives: '+G.lives)).appendTo($pp);
+
+  // Phase cycling
+  stealthState.phaseTimer=setInterval(()=>{
+    if(stealthState.done) return;
+    stealthState.phase=(stealthState.phase+1)%cfg.phases.length;
+    const ph=stealthState.phase;
+    const isS=cfg.phases[ph].includes(cfg.safePhaseName);
+    stealthState.safeNow=isS;
+    const $st=$('#stealth-status');
+    $st.removeClass('danger safe warning').text(cfg.phases[ph]);
+    if(isS) $st.addClass('safe');
+    else if(ph===cfg.phases.length-1) $st.addClass('warning');
+    else $st.addClass('danger');
+    stealthState._phaseTO=setTimeout(()=>{},cfg.phaseTimes[ph]);
+  },cfg.phaseTimes.reduce((a,b)=>a+b)/cfg.phases.length);
+
+  // Countdown
+  stealthState.countTimer=setInterval(()=>{
+    if(stealthState.done) return;
+    stealthState.timeLeft--;
+    const pct=stealthState.timeLeft/cfg.timeLimit;
+    $('#t-arc').attr('stroke-dashoffset',CIRC*(1-pct))
+      .attr('stroke',stealthState.timeLeft<=4?'#ff4060':stealthState.timeLeft<=8?'#f0a030':'#a060ff');
+    $('#t-num').text(stealthState.timeLeft);
+    if(stealthState.timeLeft<=4) SFX.tick();
+    if(stealthState.timeLeft<=0){
+      stealthState.done=true;
+      clearInterval(stealthState.phaseTimer);clearInterval(stealthState.countTimer);
+      $('.stealth-btn').prop('disabled',true);
+      SFX.wrong();shakeScreen();
+      $('#stealth-msg').html('<div class="p-msg bad">⏰ Too slow! Meomeo was caught!</div>');
+      loseLife('Stealth timer ran out!');
+      if(G.lives>0) setTimeout(()=>showStealthPuzzle(stealthState.type),2000);
+    }
+  },1000);
+}
+
+function stealthAct(action){
+  if(stealthState.done) return;
+  stealthState.done=true;
+  clearInterval(stealthState.phaseTimer);clearInterval(stealthState.countTimer);
+  SFX.click();flashScreen();
+  $('.stealth-btn').prop('disabled',true);
+  stealthState.actions++;
+
+  const isHide=(action==='hide'||action==='dodge');
+  if(isHide&&stealthState.safeNow){
+    SFX.correct();$('#cat-area').catExpr('happy');
+    modStat('courage',2);modStat('streetSkill',1);
+    $('#stealth-msg').html('<div class="p-msg ok">✅ Perfect timing! Meomeo slipped away unseen.</div>');
+    addItem('bandage');
+    setTimeout(()=>stealthCompleted(),2200);
+  } else if(action==='run'||action==='counter'){
+    SFX.trans();$('#cat-area').catExpr('cat_try');
+    modStat('courage',1);
+    $('#stealth-msg').html('<div class="p-msg warn">⚡ Risky move! Meomeo escaped, but barely.</div>');
+    setTimeout(()=>stealthCompleted(),2200);
+  } else {
+    SFX.wrong();shakeScreen();$('#cat-area').catExpr('scared');
+    modStat('hp',-1);
+    $('#stealth-msg').html('<div class="p-msg bad">❌ Bad timing! Meomeo took damage.</div>');
+    loseLife('Bad stealth timing!');
+    if(G.lives>0) setTimeout(()=>showStealthPuzzle(stealthState.type),2000);
+  }
+}
+function stealthCompleted(){
+  if(stealthState.type==='feral') fadeTransition(()=>showEnding('ending_feral'));
+  else fadeTransition(()=>loadScene('food_search'));
+}
+
+/* ═══════════════════════════════════════════════════════
+   PUZZLE 5: FOOD HUNT (HARDCORE)
+═══════════════════════════════════════════════════════ */
+const HC_FOODS=[
+  {id:'bowl',  ic:'🥣',lb:'Clean Bowl',    e:1,safe:true, hp:0, msg:'Clean food bowl! Hunger +1'},
+  {id:'fish',  ic:'🐟',lb:'Fresh Fish',    e:1,safe:true, hp:0, msg:'Fresh fish! Hunger +1 ✅'},
+  {id:'milk',  ic:'🥛',lb:'Fresh Milk',    e:1,safe:true, hp:0, msg:'Nice milk! Hunger +1 ✅'},
+  {id:'bone',  ic:'🦴',lb:'Rotten Bone',   e:0,safe:false,hp:-1,msg:'Rotten! HP -1 ☠'},
+  {id:'trash', ic:'🗑️',lb:'Poison Trash',  e:0,safe:false,hp:-1,msg:'Poisoned! HP -1 ☠'},
+];
+let foodFound={};
+function showFoodPuzzle(){
+  hideAllNPCs();foodFound={};
+  setArt('city');$('#bg').attr('class','bg-city');
+  $('#cat-area').catExpr('idle');posCat('left',205);
+  clearParticles();spawnStars(50);spawnFloat('fish',10);
+  $('#chapter-tag').text('🍽️ Find Food!');
+  $('#dialogue-wrap').hide();$('#choice-panel').hide();
+  const $pp=$('#puzzle-panel').empty().css('display','flex');
+  $('<div>').addClass('puz-title').text('🍽️ Find Safe Food!').appendTo($pp);
+  $('<div>').addClass('puz-desc').text('Find 2 safe food sources. Rotten food damages HP! 3 lives remain.').appendTo($pp);
+
+  const $erow=$('<div>').css({width:'100%',maxWidth:'480px'}).appendTo($pp);
+  $erow.append($('<div>').css({display:'flex',justifyContent:'space-between',marginBottom:'6px'})
+    .append($('<span>').css({fontSize:'.78rem',color:'rgba(200,178,255,.8)',fontWeight:800}).text('🍖 Hunger'))
+    .append($('<span>').attr('id','fn').css({fontSize:'.78rem',color:'rgba(200,178,255,.8)',fontWeight:800}).text(G.hunger+'/3')));
+  $erow.append($('<div>').css({width:'100%',height:'18px',background:'rgba(255,255,255,.07)',borderRadius:'50px',overflow:'hidden',border:'1px solid rgba(255,255,255,.1)'})
+    .append($('<div>').attr('id','fp-bar').css({height:'100%',borderRadius:'50px',background:'linear-gradient(90deg,#f07030,#f5c040)',width:(G.hunger/3*100)+'%',transition:'width .6s'})));
+
+  const $frow=$('<div>').css({display:'flex',gap:'14px',justifyContent:'center',flexWrap:'wrap',marginTop:'8px'}).appendTo($pp);
+  HC_FOODS.forEach(f=>{
+    $('<div>').css({width:'90px',height:'100px',background:'rgba(38,16,80,.65)',border:'2px solid rgba(120,70,220,.42)',
+      borderRadius:'16px',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:'7px',cursor:'pointer',transition:'all .28s'})
+      .attr('id','fi-'+f.id)
+      .append($('<div>').css('fontSize','2.2rem').text(f.ic))
+      .append($('<div>').css({fontSize:'.68rem',color:'rgba(200,178,255,.8)',fontWeight:800,textAlign:'center'}).text(f.lb))
+      .on('click',()=>eatFoodHC(f.id))
+      .hover(function(){$(this).css({borderColor:'var(--pm)',transform:'scale(1.1) translateY(-5px)'});},
+             function(){$(this).css({borderColor:'rgba(120,70,220,.42)',transform:'scale(1)'});})
+      .appendTo($frow);
+  });
+  $('<div>').attr('id','fd-msg').appendTo($pp);
+  $('<button>').addClass('p-btn').attr('id','fd-go').text('Continue → Final Stage 🌟').hide()
+    .on('click',()=>fadeTransition(()=>loadScene('final_choice'))).appendTo($pp);
+}
+function eatFoodHC(id){
+  if(foodFound[id]) return;
+  SFX.click();flashScreen();foodFound[id]=true;
+  const f=HC_FOODS.find(x=>x.id===id);
+  const $fi=$('#fi-'+f.id);
+  if(f.safe){
+    SFX.correct();
+    modStat('hunger',f.e);
+    $fi.css({borderColor:'#60e090',background:'rgba(35,110,75,.35)',pointerEvents:'none'});
+    $('#fd-msg').html('<div class="p-msg ok">'+f.msg+'</div>');
+    $('#fn').text(G.hunger+'/3');
+    if(G.hunger>=2){SFX.happy();$('#cat-area').catExpr('happy');$('#fd-go').slideDown(300);}
+  } else {
+    SFX.wrong();shakeScreen();
+    $fi.css({borderColor:'#ff5070',background:'rgba(155,35,55,.42)',pointerEvents:'none',animation:'shk .28s'});
+    $('#cat-area').catExpr('scared');
+    $('#fd-msg').html('<div class="p-msg bad">'+f.msg+'</div>');
+    modStat('hp',f.hp);
+    if(G.hp<=0){loseLife('Eaten poisoned food!');}
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   CAT PUZZLE (kept, enhanced)
+═══════════════════════════════════════════════════════ */
+const CAT_ROUNDS=[
+  {title:'Round 1: Safe Shelter',desc:'Pick ONE safe shelter.',need:1,
+   tiles:[{ic:'📦',lb:'Cardboard box',ty:'safe'},{ic:'🚗',lb:'Moving car',ty:'danger'},
+          {ic:'🌿',lb:'Bushes near wall',ty:'safe'},{ic:'🛣️',lb:'Middle of road',ty:'danger'}]},
+  {title:'Round 2: Safe Food',desc:'Pick ONE safe food.',need:1,
+   tiles:[{ic:'🥣',lb:'Clean bowl',ty:'safe'},{ic:'🧪',lb:'Strange liquid',ty:'danger'},
+          {ic:'🐟',lb:'Fresh fish scrap',ty:'safe'},{ic:'🗑️',lb:'Rotten scraps',ty:'danger'}]},
+  {title:'Round 3: React Smart',desc:'Pick ONE smart reaction.',need:1,
+   tiles:[{ic:'👃',lb:'Sniff calmly',ty:'safe'},{ic:'⚔️',lb:'Attack first',ty:'danger'},
+          {ic:'🐾',lb:'Step back slow',ty:'safe'},{ic:'😾',lb:'Hiss loudly',ty:'danger'}]},
+];
+let catRound=0,catSel=[],catMistakes=0;
+function showCatPuzzle(){
+  catRound=0;catSel=[];catMistakes=0;
+  setArt('alley');$('#bg').attr('class','bg-alley');
+  $('#cat-area').catExpr('scared');posCat('center',195);
+  showNPC('left','Mochi','talk',135);showNPC('right','Shadow','talk',160);
+  clearParticles();spawnStars(40);
+  $('#chapter-tag').text('🐾 Puzzle — Join the Gang');
+  $('#dialogue-wrap').hide();$('#choice-panel').hide();
+  renderCatRound();
+}
+function renderCatRound(){
+  catSel=[];
+  const round=CAT_ROUNDS[catRound];
+  const $pp=$('#puzzle-panel').empty().css('display','flex');
+  $('<div>').addClass('puz-title').text('😼 Prove Yourself!').appendTo($pp);
+  $('<div>').addClass('puz-desc').html(`<strong>${round.title}</strong><br>${round.desc}<br>Progress: ${catRound+1}/${CAT_ROUNDS.length}`).appendTo($pp);
+  $('<div>').addClass('stat-row').append($('<span>').text('StreetSkill: '+G.streetSkill)).append($('<span>').text('Mistakes: '+catMistakes)).append($('<span>').text('Lives: '+G.lives)).appendTo($pp);
+  const $grid=$('<div>').addClass('p-grid').appendTo($pp);
+  round.tiles.forEach((t,i)=>{
+    $('<div>').addClass('p-tile').attr({'data-idx':i,'data-ty':t.ty})
+      .append($('<span>').addClass('ti').text(t.ic))
+      .append($('<span>').addClass('tl').text(t.lb))
+      .on('click',function(){cpTile($(this));}).appendTo($grid);
+  });
+  $('<div>').attr('id','cp-msg').appendTo($pp);
+  $('<button>').addClass('p-btn').text('✅ Submit').prop('disabled',true).attr('id','cp-ok').on('click',checkCat).appendTo($pp);
+}
+function cpTile($el){
+  if($el.hasClass('correct')||$el.hasClass('wrong')) return;
+  SFX.click();
+  const round=CAT_ROUNDS[catRound];
+  const idx=parseInt($el.attr('data-idx'));
+  const pos=catSel.indexOf(idx);
+  if(pos>-1){catSel.splice(pos,1);$el.removeClass('selected');}
+  else{if(catSel.length>=round.need) return;catSel.push(idx);$el.addClass('selected');}
+  $('#cp-ok').prop('disabled',catSel.length<round.need);
+}
+function checkCat(){
+  SFX.click();
+  const round=CAT_ROUNDS[catRound];
+  const allSafe=catSel.every(i=>round.tiles[i].ty==='safe');
+  catSel.forEach(i=>{
+    $(`[data-idx="${i}"]`).removeClass('selected').addClass(round.tiles[i].ty==='safe'?'correct':'wrong');
+  });
+  const $msg=$('#cp-msg').empty();
+  if(allSafe){
+    SFX.correct();flashScreen();$('#cat-area').catExpr('happy');
+    modStat('streetSkill',1);
+    $msg.append($('<div>').addClass('p-msg ok').text('Good instinct!'));
+    $('#cp-ok').prop('disabled',true);
+    setTimeout(()=>{catRound++;if(catRound>=CAT_ROUNDS.length){catCompleted();}else renderCatRound();},1300);
+  } else {
+    SFX.wrong();shakeScreen();$('#cat-area').catExpr('sad');catMistakes++;
+    $msg.append($('<div>').addClass('p-msg bad').text('Risky choice! Life -1'));
+    $('#cp-ok').prop('disabled',true);
+    loseLife('Bad survival instinct!');
+    if(G.lives>0) setTimeout(()=>renderCatRound(),1600);
+  }
+}
+function catCompleted(){
+  SFX.tada();modStat('streetSkill',1);modStat('kindness',1);addItem('fish_bone');
+  $('#cp-msg').html('<div class="p-msg ok">🎉 Shadow says: "Alright. You\'re one of us now."</div>');
+  setTimeout(()=>fadeTransition(()=>loadScene('ending_cats')),2200);
+}
+
+/* ═══════════════════════════════════════════════════════
+   ENDING SCREEN
+═══════════════════════════════════════════════════════ */
+function showEnding(id){
+  const e=ENDINGS[id]; if(!e) return;
+  unlockEnding(id);
+  stopAuto();hideAllNPCs();clearAllPuzzleTimers();
+  $('#bg').attr('class',e.bg);setArt('none');
+  clearParticles();spawnFloat(e.parts,26);spawnStars(20);
+  $('#chapter-tag').text('🌟 '+e.badge);
+  $('#cat-area').hide();
+  $('#dialogue-wrap').hide();$('#choice-panel').hide();
+  $('#puzzle-panel').hide().css('display','none');
+  $('#fail-overlay').hide();
+  flashScreen();SFX.tada();
+  const $es=$('#ending-screen').show().css({display:'flex',color:e.col}).empty();
+  $('<div>').addClass('e-badge').text(e.badge).appendTo($es);
+  $('<div>').addClass('e-title').css('color',e.col).text(e.title).appendTo($es);
+  $('<div>').addClass('e-text').html(e.text.replace(/\n/g,'<br>')).appendTo($es);
+  // Show final stats
+  const $estats=$('<div>').addClass('e-stats').appendTo($es);
+  [['❤️ HP',G.hp],['⚡ Courage',G.courage],['🐾 StreetSkill',G.streetSkill],
+   ['💜 Kindness',G.kindness],['🎒 Items',G.inventory.length]].forEach(([l,v])=>{
+    $('<div>').addClass('e-stat-pill').text(l+': '+v).appendTo($estats);
+  });
+  $('<div>').addClass('e-quote').css('color',e.col+'aa').text(e.quote).appendTo($es);
+  const $btns=$('<div>').addClass('e-btns').appendTo($es);
+  $('<button>').addClass('e-btn').text('🔄 Play Again').on('click',playAgain).appendTo($btns);
+  $('<button>').addClass('e-btn').text('📜 All Endings').on('click',showEndingGallery).appendTo($btns);
+  spawnFloat(e.parts,10);
+}
+
+/* ═══════════════════════════════════════════════════════
+   PLAY AGAIN / RESET
+═══════════════════════════════════════════════════════ */
+function playAgain(){
+  SFX.click();stopAuto();hideAllNPCs();clearAllPuzzleTimers();
+  G.hp=G.maxHp;G.hunger=G.maxHunger;G.courage=0;G.streetSkill=0;G.kindness=0;G.suspicion=0;
+  G.lives=G.maxLives;G.inventory=[];G.chapterStartScene=null;
+  $('#backlog-list').empty();backlog.length=0;
+  fadeTransition(()=>{
+    $('#ending-screen').hide();$('#ending-gallery').remove();
+    $('#title-screen').fadeIn(400);$('#cat-area').show();
+    clearParticles();buildTitle();updateStatsHUD();updateLivesHUD();renderInventory();
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   TITLE SCREEN
+═══════════════════════════════════════════════════════ */
+function buildTitle(){
+  const $bg=$('#title-bg').empty();
+  for(let i=0;i<70;i++){
+    const sz=1+Math.random()*2.5;
+    $('<div>').addClass('t-star').css({width:sz+'px',height:sz+'px',
+      left:Math.random()*100+'%',top:Math.random()*100+'%',
+      '--d':(1.4+Math.random()*3.5)+'s','--dl':Math.random()*4+'s'}).appendTo($bg);
+  }
+  for(let i=0;i<10;i++){
+    $('<div>').addClass('t-paw').text('🐾').css({left:Math.random()*100+'%',
+      '--d':(7+Math.random()*9)+'s','--dl':Math.random()*6+'s'}).appendTo($bg);
+  }
+}
+function startGame(){
+  SFX.click();
+  fadeTransition(()=>{$('#title-screen').hide();clearParticles();spawnStars(55);loadScene('intro');});
+}
+
+/* ═══════════════════════════════════════════════════════
+   INIT & HUD BINDINGS
+═══════════════════════════════════════════════════════ */
+$(function(){
+  buildTitle();
+  $('#cat-area').catExpr('idle');posCat('center',220);
+  updateStatsHUD();updateLivesHUD();renderInventory();
+
+  $('#t-start').on('click',startGame);
+
+  $('#dialogue-wrap').on('click',function(e){
+    if($(e.target).closest('#tap-hint').length) return;
+    nextDialogue();
+  });
+
+  // INVENTORY
+  $('#inv-btn').on('click',function(){
+    SFX.click();
+    const $ib=$('#inventory-bar');
+    const vis=$ib.is(':visible');
+    $ib.css('display',vis?'none':'flex');
+    $(this).toggleClass('active',!vis);
+    if(!vis) renderInventory();
+  });
+  $('#inv-close-btn').on('click',function(){
+    SFX.click();$('#inventory-bar').hide();$('#inv-btn').removeClass('active');
+  });
+
+  // AUTO
+  $('#auto-btn').on('click',function(){
+    SFX.click();G.autoOn=!G.autoOn;G.skipOn=false;
+    $(this).toggleClass('active',G.autoOn);$('#skip-btn').removeClass('active');
+    $('#auto-indicator').toggle(G.autoOn);$('#skip-indicator').hide();
+    if(G.autoOn){showToast('⏵ Auto ON');startAutoTimer();}else{showToast('⏸ Auto OFF');stopAutoTimer();}
+  });
+  $('#skip-btn').on('click',function(){
+    SFX.click();G.skipOn=!G.skipOn;G.autoOn=false;
+    $(this).toggleClass('active',G.skipOn);$('#auto-btn').removeClass('active');
+    $('#skip-indicator').toggle(G.skipOn);$('#auto-indicator').hide();
+    stopAutoTimer();
+    if(G.skipOn){showToast('⏩ Skip ON');nextDialogue();}else showToast('⏩ Skip OFF');
+  });
+  $('#log-btn').on('click',function(){
+    SFX.click();$('#backlog-panel').toggle(300);$(this).toggleClass('active',$('#backlog-panel').is(':visible'));
+  });
+  $('#backlog-close').on('click',function(){SFX.click();$('#backlog-panel').slideUp(300);$('#log-btn').removeClass('active');});
+  $('#set-btn').on('click',function(){SFX.click();$('#settings-panel').slideToggle(300);$(this).toggleClass('active',$('#settings-panel').is(':visible'));});
+  $('#sound-btn').on('click',function(){
+    SFX.click();const m=SFX.toggleMute();$(this).text(m?'🔇':'🔊').toggleClass('active',m);
+    showToast(m?'🔇 Sound OFF':'🔊 Sound ON');
+  });
+  $('#speed-slider').on('input',function(){G.textSpeed=+$(this).val();$('#speed-val').text(G.textSpeed);});
+  $('#auto-slider').on('input',function(){G.autoSpeed=+$(this).val()*1000;$('#auto-val').text($(this).val()+'s');});
+  $('#vol-slider').on('input',function(){SFX.setVol(+$(this).val());$('#vol-val').text($(this).val());});
+
+  // Cat meow click
+  $('#cat-area').on('click',function(){
+    SFX.meow();
+    const meows=['Mrow! 🐾','*purr*','Nyaa~!','Meow ♥','*chirp*','Purrr...'];
+    const txt=meows[Math.floor(Math.random()*meows.length)];
+    const $pop=$('#meow-pop');
+    const catOff=$(this).position();
+    $pop.text(txt).css({left:(catOff.left+40)+'px',top:(catOff.top-14)+'px',display:'block',opacity:0})
+      .stop(true).animate({opacity:1,top:(catOff.top-28)+'px'},200).delay(1200).animate({opacity:0},300,function(){$(this).hide();});
+  });
+
+  // Fail overlay buttons
+  $('#fo-retry').on('click',retryChapter);
+  $('#fo-restart').on('click',playAgain);
+
+  // Keyboard
+  $(document).on('keydown',function(e){
+    if($('#title-screen').is(':visible')){
+      if(e.code==='Space'||e.code==='Enter'){e.preventDefault();startGame();}return;
+    }
+    switch(e.code){
+      case 'Space':case 'Enter':
+        e.preventDefault();
+        if($('#dialogue-wrap').is(':visible')) nextDialogue();break;
+      case 'KeyA':$('#auto-btn').trigger('click');break;
+      case 'KeyS':$('#skip-btn').trigger('click');break;
+      case 'KeyB':$('#log-btn').trigger('click');break;
+      case 'KeyI':$('#inv-btn').trigger('click');break;
+      case 'Escape':$('#set-btn').trigger('click');break;
+    }
+  });
+
+  $(document).on('click',function(e){
+    if($('#settings-panel').is(':visible')&&!$(e.target).closest('#settings-panel,#set-btn').length){
+      $('#settings-panel').slideUp(300);$('#set-btn').removeClass('active');
+    }
+  });
+});
+</script>
+</body>
+</html>
