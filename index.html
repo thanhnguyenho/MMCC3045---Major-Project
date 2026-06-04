@@ -143,6 +143,67 @@
   <!-- ENDING SCREEN -->
   <div id="ending-screen"></div>
 
+  <!-- AFTER CREDIT SCREEN -->
+<div id="after-credit-screen">
+  <div class="ac-card">
+    <div class="ac-badge">🐾 AFTER CREDITS</div>
+
+    <video
+      class="ac-cat-video"
+     src="Media/AfterCredit/my-cat.mp4" controls autoplay muted playsinline preload="metadata" ></video>
+
+    <h2 class="ac-title">The Cat Behind Meomeo</h2>
+
+    <p class="ac-text">
+      Meomeo’s Journey Home was inspired by a real cat who gave this story its heart. 
+      She's also named Meomeo in real life who I adopted last year and has been my little shadow and muse ever since.
+      This short after-credit scene is dedicated to the quiet little presence that shaped the idea of care, trust, loneliness, and home in this project.
+    </p>
+
+    <p class="ac-quote">
+      “Some stories begin with imagination. This one began with a cat.”
+    </p>
+
+    <div class="ac-btns">
+      <button class="e-btn" id="ac-back-ending">← Back to Ending</button>
+      <button class="e-btn" id="ac-play-again">🔄 Play Again</button>
+    </div>
+  </div>
+ </div>
+
+  <!-- AFTER CREDIT SCREEN -->
+<div id="after-credit-screen">
+  <div class="ac-card">
+    <div class="ac-badge">🐾 AFTER CREDITS</div>
+
+    <video
+      class="ac-cat-video"
+      src="Media/AfterCredit/my-cat.mp4"
+      controls
+      playsinline
+      preload="metadata"
+    ></video>
+
+    <h2 class="ac-title">The Cat Behind Meomeo</h2>
+
+    <p class="ac-text">
+      Meomeo’s Journey Home was inspired by a real cat who gave this story its heart.
+      She's also named Meomeo in real life who I adopted last year and has been my little shadow and muse ever since.
+      This short after-credit scene is dedicated to the quiet little presence that shaped
+      the idea of care, trust, loneliness, and home in this project.
+    </p>
+
+    <p class="ac-quote">
+      “Some stories begin with imagination. This one began with a cat.”
+    </p>
+
+    <div class="ac-btns">
+      <button class="e-btn" id="ac-back-ending">← Back to Ending</button>
+      <button class="e-btn" id="ac-play-again">🔄 Play Again</button>
+    </div>
+  </div>
+ </div>
+
   <!-- CHAPTER CARD -->
   <div id="chapter-card">
     <div class="cc-line"></div>
@@ -161,8 +222,6 @@
     <div class="t-tagline">A Visual Novel Adventure</div>
     <div class="t-cat-wrap">🐱</div>
     <h1 id="t-title">Meomeo's<br>Journey Home</h1>
-    <p id="t-sub">✨ Hardcore Edition ✨</p>
-    <div class="hc-warning">☠ HARDCORE MODE — Fail a puzzle = lose a life. Lose all lives = restart chapter.</div>
     <div class="t-div"></div>
     <button id="t-start">🐾 Begin Journey</button>
     <p id="t-hint">6 possible endings • 5 mini-game types • Inventory system</p>
@@ -1711,11 +1770,48 @@ function showEnding(id){
     $('<div>').addClass('e-stat-pill').text(l+': '+v).appendTo($estats);
   });
   $('<div>').addClass('e-quote').css('color',e.col+'aa').text(e.quote).appendTo($es);
-  const $btns=$('<div>').addClass('e-btns').appendTo($es);
-  $('<button>').addClass('e-btn').text('🔄 Play Again').on('click',playAgain).appendTo($btns);
-  $('<button>').addClass('e-btn').text('📜 All Endings').on('click',showEndingGallery).appendTo($btns);
-  spawnFloat(e.parts,10);
+  
+ const $btns = $('<div>').addClass('e-btns').appendTo($es);
+ $('<button>')
+  .addClass('e-btn')
+  .text('🐾 After Credits')
+  .on('click', showAfterCredit)
+  .appendTo($btns);
+
+ $('<button>')
+  .addClass('e-btn')
+  .text('🔄 Play Again')
+  .on('click', playAgain)
+  .appendTo($btns);
+
+ $('<button>')
+  .addClass('e-btn')
+  .text('📜 All Endings')
+  .on('click', showEndingGallery)
+  .appendTo($btns);
+
+ spawnFloat(e.parts, 10);
+ 
 }
+
+function showAfterCredit() {
+  SFX.click();
+
+  $('#ending-screen').hide();
+  $('#ending-gallery').remove();
+
+  clearParticles();
+  spawnStars(30);
+  spawnFloat('hearts', 18);
+
+  $('#chapter-tag').text('🐾 After Credits');
+
+  $('#after-credit-screen')
+    .css('display', 'flex')
+    .hide()
+    .fadeIn(500);
+}
+
 
 /* ═══════════════════════════════════════════════════════
    PLAY AGAIN / RESET
@@ -1822,6 +1918,30 @@ $(function(){
   // Fail overlay buttons
   $('#fo-retry').on('click',retryChapter);
   $('#fo-restart').on('click',playAgain);
+
+  // After credit buttons
+  $('#ac-back-ending').on('click', function() {
+  SFX.click();
+  const video = document.querySelector('.ac-cat-video');
+  if (video) {
+    video.pause();
+  }
+  $('#after-credit-screen').fadeOut(300, function() {
+    $('#ending-screen').fadeIn(300).css('display', 'flex');
+  });
+  $('#chapter-tag').text('🌟 Ending');
+ });
+
+ $('#ac-play-again').on('click', function() {
+  SFX.click();
+  const video = document.querySelector('.ac-cat-video');
+  if (video) {
+    video.pause();
+    video.currentTime = 0;
+  }
+  $('#after-credit-screen').hide();
+  playAgain();
+ });
 
   // Keyboard
   $(document).on('keydown',function(e){
