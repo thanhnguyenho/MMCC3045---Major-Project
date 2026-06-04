@@ -1114,7 +1114,7 @@ const MEM_SETS = {
     ],
     title:'🧠 Lily\'s Memory Test',
     desc:'Lily is testing your memory. Match all pairs before time runs out! Each wrong match costs a life.',
-    timeLimit:40,
+    timeLimit:20,
     cols:4,
   }
 };
@@ -1466,7 +1466,7 @@ const STEALTH_CONFIGS={
     desc:'The dog patrols. Wait for the safe window, then hide! Act too early or too late = lose a life.',
     phases:['DANGER — eyes on you! Stay still.','SAFE — now! Hide quickly!','WARNING — it\'s turning back!'],
     phaseTimes:[1800,1200,700],
-    timeLimit:14,
+    timeLimit:7,
     safePhaseName:'SAFE',
     buttons:[
       {id:'hide',icon:'📦',label:'Hide\nNow'},
@@ -1478,7 +1478,7 @@ const STEALTH_CONFIGS={
     desc:'The feral leader charges in waves. Dodge at the right moment! Timing is everything.',
     phases:['CHARGING — incoming attack!','DODGE WINDOW — move now!','RECOVERING — wait for next...'],
     phaseTimes:[2000,900,800],
-    timeLimit:16,
+    timeLimit:7,
     safePhaseName:'DODGE WINDOW',
     buttons:[
       {id:'dodge',icon:'💨',label:'Dodge!'},
